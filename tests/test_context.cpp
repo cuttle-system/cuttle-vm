@@ -235,6 +235,49 @@ inline void test_get_variable_from_context_throws_name_error() {
 	}
 }
 
+inline void test_call_function() {
+	{
+		context_t context;
+		value_t func = { {type_id::function} };
+		func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
+			ret.type = { type_id::integral };
+			ret.data.integral = context.gc.add(new int{ 275 });
+			return 0;
+		};
+		value_t ret;
+		value_t expect = { {type_id::integral} };
+		expect.data.integral = context.gc.add(new int{ 275 });
+
+		add(context, "foo", func);
+
+		int status = call(context, "foo", {}, ret);
+
+		AssertEqual(status, 0, "Status");
+		AssertEqual(ret, expect, "Return value");
+	}
+	{
+		context_t context;
+		value_t func = { { type_id::function, {{type_id::integral}} } };
+		func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
+			ret.type = { type_id::integral };
+			ret.data.integral = context.gc.add(new int{ 275 + *args[0].data.integral });
+			return 0;
+		};
+		value_t ret;
+		value_t arg = { {type_id::integral} };
+		arg.data.integral = context.gc.add(new int{ 25 });
+		value_t expect = { { type_id::integral } };
+		expect.data.integral = context.gc.add(new int{ 300 });
+
+		add(context, "foo", func);
+
+		int status = call(context, "foo", {arg}, ret);
+
+		AssertEqual(status, 0, "Status");
+		AssertEqual(ret, expect, "Return value");
+	}
+}
+
 void run_context_tests() {
 	TESTCASE
 	test_add_variable_to_context();
@@ -242,4 +285,5 @@ void run_context_tests() {
 	test_get_variable_from_context();
 	test_get_variable_from_context_with_one_name_and_different_types();
 	test_get_variable_from_context_throws_name_error();
+	test_call_function();
 }
