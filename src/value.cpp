@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "value_methods.hpp"
 #include "type_error.hpp"
 
@@ -22,13 +23,17 @@ bool cuttle::vm::operator==(const value_t& left, const value_t& right) {
 	case type_id::integral:
 		return *left.data.integral == *right.data.integral;
 	case type_id::real:
-		return *left.data.integral == *right.data.integral;
+		return std::abs(*left.data.real - *right.data.real) < std::numeric_limits<double>::epsilon() * std::max({
+			*left.data.real,
+			*right.data.real,
+			1.0
+		});
 	case type_id::byte:
 		return *left.data.byte == *right.data.byte;
 	case type_id::string:
 		return *left.data.string == *right.data.string;
 	default:
-		throw type_error("uknown type");
+		throw type_error("unknown type");
 	}
 }
 

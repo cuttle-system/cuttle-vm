@@ -29,6 +29,7 @@ elseif(WIN32)
 	#set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DEBUG /OPT:REF /OPT:ICF")
 endif()
 
+
 add_library(cuttle_vm SHARED ${SRCS} ${HEADERS})
 add_executable(tests ${TEST_SRCS} ${HEADERS} ${TEST_HEADERS})
 
