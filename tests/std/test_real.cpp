@@ -77,8 +77,28 @@ inline void test_string_to_real() {
 	}
 }
 
+inline void test_integral_to_real() {
+	using namespace cuttle::vm;
+
+	context_t context;
+
+	populate(context);
+
+	{
+		value_t val = { { type_id::integral } };
+		val.data.integral = context.gc.add(new int{ 3 });
+		value_t expect = { { type_id::real },{ context.gc.add(new double{ 3.0 }) } };
+		value_t ret;
+
+		integral_to_real_func(context, { val }, ret);
+
+		AssertEqual(ret, expect, "Return value");
+	}
+}
+
 void run_real_tests() {
     TESTCASE
     test_real_plus();
 	test_string_to_real();
+	test_integral_to_real();
 }
