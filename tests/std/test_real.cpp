@@ -173,7 +173,7 @@ inline void test_integral_to_real() {
 
 	{
 		value_t val = { { type_id::integral } };
-		val.data.integral = context.gc.add(new int{ 3 });
+		val.data.integral = context.gc.add(new long long{ 3 });
 		value_t expect = { { type_id::real },{ context.gc.add(new double{ 3.0 }) } };
 		value_t ret;
 

@@ -17,8 +17,8 @@ inline void test_add_variable_to_context() {
 		value_t val = { {type_id::integral} };
 		value_t val2 = { {type_id::integral} };
 
-		val.data.integral = context.gc.add(new int{ 1 });
-		val2.data.integral = context.gc.add(new int{ 2 });
+		val.data.integral = context.gc.add(new long long{ 1 });
+		val2.data.integral = context.gc.add(new long long{ 2 });
 
 		add(context, "foo", val);
 
@@ -31,9 +31,9 @@ inline void test_add_variable_to_context() {
 		value_t val2 = { { type_id::integral } };
 		value_t val3 = { { type_id::integral } };
 
-		val.data.integral = context.gc.add(new int{ 1 });
-		val2.data.integral = context.gc.add(new int{ 1 });
-		val3.data.integral = context.gc.add(new int{ 2 });
+		val.data.integral = context.gc.add(new long long{ 1 });
+		val2.data.integral = context.gc.add(new long long{ 1 });
+		val3.data.integral = context.gc.add(new long long{ 2 });
 		
 		add(context, "foo", val);
 
@@ -46,9 +46,9 @@ inline void test_add_variable_to_context() {
 		value_t val2 = { { type_id::integral } };
 		value_t val3 = { { type_id::integral } };
 
-		val.data.integral = context.gc.add(new int{ 1 });
-		val2.data.integral = context.gc.add(new int{ 2 });
-		val3.data.integral = context.gc.add(new int{ 3 });
+		val.data.integral = context.gc.add(new long long{ 1 });
+		val2.data.integral = context.gc.add(new long long{ 2 });
+		val3.data.integral = context.gc.add(new long long{ 3 });
 
 		add(context, "foo", val);
 		add(context, "bar", val2);
@@ -63,8 +63,8 @@ inline void test_add_variable_to_context() {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::integral } };
 
-		val.data.integral = context.gc.add(new int{ 1 });
-		val2.data.integral = context.gc.add(new int{ 2 });
+		val.data.integral = context.gc.add(new long long{ 1 });
+		val2.data.integral = context.gc.add(new long long{ 2 });
 
 		add(context, "foo", val);
 		AssertEqual(context.variables["foo"][val.type], val, "Value");
@@ -81,7 +81,7 @@ inline void test_add_variable_to_context_with_one_name_and_different_types() {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::string } };
 
-		val.data.integral = context.gc.add(new int{ 1 });
+		val.data.integral = context.gc.add(new long long{ 1 });
 		val2.data.string = context.gc.add(new std::string{ "this is a test string" });
 
 		add(context, "foo", val);
@@ -95,7 +95,7 @@ inline void test_add_variable_to_context_with_one_name_and_different_types() {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::string } };
 
-		val.data.integral = context.gc.add(new int{ 1 });
+		val.data.integral = context.gc.add(new long long{ 1 });
 		val2.data.string = context.gc.add(new std::string{ "this is a test string" });
 
 		add(context, "foo", val);
@@ -118,8 +118,8 @@ inline void test_get_variable_from_context() {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::integral } };
 
-		val.data.integral = context.gc.add(new int{ 1 });
-		val2.data.integral = context.gc.add(new int{ 2 });
+		val.data.integral = context.gc.add(new long long{ 1 });
+		val2.data.integral = context.gc.add(new long long{ 2 });
 
 		add(context, "foo", val);
 
@@ -132,9 +132,9 @@ inline void test_get_variable_from_context() {
 		value_t val2 = { { type_id::integral } };
 		value_t val3 = { { type_id::integral } };
 
-		val.data.integral = context.gc.add(new int{ 1 });
-		val2.data.integral = context.gc.add(new int{ 1 });
-		val3.data.integral = context.gc.add(new int{ 2 });
+		val.data.integral = context.gc.add(new long long{ 1 });
+		val2.data.integral = context.gc.add(new long long{ 1 });
+		val3.data.integral = context.gc.add(new long long{ 2 });
 
 		add(context, "foo", val);
 
@@ -147,9 +147,9 @@ inline void test_get_variable_from_context() {
 		value_t val2 = { { type_id::integral } };
 		value_t val3 = { { type_id::integral } };
 
-		val.data.integral = context.gc.add(new int{ 1 });
-		val2.data.integral = context.gc.add(new int{ 2 });
-		val3.data.integral = context.gc.add(new int{ 3 });
+		val.data.integral = context.gc.add(new long long{ 1 });
+		val2.data.integral = context.gc.add(new long long{ 2 });
+		val3.data.integral = context.gc.add(new long long{ 3 });
 
 		add(context, "foo", val);
 		add(context, "bar", val2);
@@ -167,7 +167,7 @@ inline void test_get_variable_from_context_with_one_name_and_different_types() {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::string } };
 
-		val.data.integral = context.gc.add(new int{ 1 });
+		val.data.integral = context.gc.add(new long long{ 1 });
 		val2.data.string = context.gc.add(new std::string{ "this is a test string" });
 
 		add(context, "foo", val);
@@ -181,7 +181,7 @@ inline void test_get_variable_from_context_with_one_name_and_different_types() {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::string } };
 
-		val.data.integral = context.gc.add(new int{ 1 });
+		val.data.integral = context.gc.add(new long long{ 1 });
 		val2.data.string = context.gc.add(new std::string{ "this is a test string" });
 
 		add(context, "foo", val);
@@ -211,7 +211,7 @@ inline void test_get_variable_from_context_throws_name_error() {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::string } };
 
-		val.data.integral = context.gc.add(new int{ 1 });
+		val.data.integral = context.gc.add(new long long{ 1 });
 		val2.data.string = context.gc.add(new std::string{ "this is a test string" });
 
 		add(context, "foo", val);
@@ -225,7 +225,7 @@ inline void test_get_variable_from_context_throws_name_error() {
 		context_t context;
 		value_t val = { { type_id::integral } };
 
-		val.data.integral = context.gc.add(new int{ 1 });
+		val.data.integral = context.gc.add(new long long{ 1 });
 
 		add(context, "foo", val);
 
@@ -241,12 +241,12 @@ inline void test_call_function() {
 		value_t func = { {type_id::function} };
 		func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
 			ret.type = { type_id::integral };
-			ret.data.integral = context.gc.add(new int{ 275 });
+			ret.data.integral = context.gc.add(new long long{ 275 });
 			return 0;
 		};
 		value_t ret;
 		value_t expect = { {type_id::integral} };
-		expect.data.integral = context.gc.add(new int{ 275 });
+		expect.data.integral = context.gc.add(new long long{ 275 });
 
 		add(context, "foo", func);
 
@@ -260,14 +260,14 @@ inline void test_call_function() {
 		value_t func = { { type_id::function, {{type_id::integral}} } };
 		func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
 			ret.type = { type_id::integral };
-			ret.data.integral = context.gc.add(new int{ 275 + *args[0].data.integral });
+			ret.data.integral = context.gc.add(new long long{ 275 + *args[0].data.integral });
 			return 0;
 		};
 		value_t ret;
 		value_t arg = { {type_id::integral} };
-		arg.data.integral = context.gc.add(new int{ 25 });
+		arg.data.integral = context.gc.add(new long long{ 25 });
 		value_t expect = { { type_id::integral } };
-		expect.data.integral = context.gc.add(new int{ 300 });
+		expect.data.integral = context.gc.add(new long long{ 300 });
 
 		add(context, "foo", func);
 
@@ -278,6 +278,37 @@ inline void test_call_function() {
 	}
 }
 
+inline void test_get_variable_from_context_with_type_id_any() {
+	{
+		context_t context;
+		value_t func = { { type_id::function, { { type_id::any } } } };
+		func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
+			ret.type = { type_id::integral };
+			ret.data.integral = context.gc.add(new long long{ 275 });
+			return 0;
+		};
+		value_t ret;
+		value_t expect = { { type_id::integral } };
+		expect.data.integral = context.gc.add(new long long{ 275 });
+
+		add(context, "foo", func);
+
+		int status = call(context, "foo", { { type_id::integral } }, ret);
+
+		AssertEqual(status, 0, "Status");
+		AssertEqual(ret, expect, "Return value");
+
+		status = call(context, "foo", { { type_id::boolean } }, ret);
+
+		AssertEqual(status, 0, "Status");
+		AssertEqual(ret, expect, "Return value");
+
+		AssertThrows(name_error, {
+			status = call(context, "foo", { {type_id::boolean}, {type_id::boolean} }, ret);
+		});
+	}
+}
+
 void run_context_tests() {
 	TESTCASE
 	test_add_variable_to_context();
@@ -285,5 +316,6 @@ void run_context_tests() {
 	test_get_variable_from_context();
 	test_get_variable_from_context_with_one_name_and_different_types();
 	test_get_variable_from_context_throws_name_error();
+	test_get_variable_from_context_with_type_id_any();
 	test_call_function();
 }

@@ -46,7 +46,7 @@ bool cuttle::vm::operator!=(const value_t& left, const value_t& right) {
 bool cuttle::vm::operator==(const type_t& left, const type_t& right) {
 	using namespace cuttle::vm;
 
-	return left.id == right.id && left.children == right.children;
+	return (left.id == right.id || left.id == type_id::any || right.id == type_id::any) && left.children == right.children;
 }
 
 bool cuttle::vm::operator!=(const type_t& left, const type_t& right) {
@@ -56,17 +56,17 @@ bool cuttle::vm::operator!=(const type_t& left, const type_t& right) {
 }
 
 bool cuttle::vm::operator>=(const type_t& left, const type_t& right) {
-	return left.id >= right.id || left.children >= right.children;
+	return left == right || left.id >= right.id || left.children >= right.children;
 }
 
 bool cuttle::vm::operator<=(const type_t& left, const type_t& right) {
-	return left.id <= right.id || left.children <= right.children;
+	return left == right || left.id <= right.id || left.children <= right.children;
 }
 
 bool cuttle::vm::operator>(const type_t& left, const type_t& right) {
-	return left.id > right.id || left.children > right.children;
+	return left != right && (left.id > right.id || left.children > right.children);
 }
 
 bool cuttle::vm::operator<(const type_t& left, const type_t& right) {
-	return left.id < right.id || left.children < right.children;
+	return left != right && (left.id < right.id || left.children < right.children);
 }

@@ -11,7 +11,7 @@ namespace cuttle {
 
 		union data {
 			double *real;
-			int *integral;
+			long long *integral;
 			std::string *string;
 			bool *boolean;
 			char *byte;
@@ -26,7 +26,8 @@ namespace cuttle {
 			boolean,
 			byte,
 			array,
-			function
+			function,
+			any
 		};
 
 		using type_t = struct type {
