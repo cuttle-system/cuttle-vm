@@ -78,7 +78,129 @@ inline void test_equal() {
 	}
 }
 
+inline void test_not_equal() {
+	using namespace cuttle::vm;
+
+	context_t context;
+
+	populate(context);
+
+	{
+		value_t val1 = { { type_id::real },{ context.gc.add(new double{ 1.0123891723 }) } };
+		value_t val2 = { { type_id::real },{ context.gc.add(new double{ 1.0123891723 }) } };
+		value_t expect = { { type_id::boolean },{ (double *)context.gc.add(new bool{ false }) } };
+		value_t ret;
+
+		not_equal_func(context, { val1, val2 }, ret);
+
+		AssertEqual(ret, expect, "Return value");
+	}
+	{
+		value_t val1 = { { type_id::real },{ context.gc.add(new double{ 1.0123891723 }) } };
+		value_t val2 = { { type_id::real },{ context.gc.add(new double{ 1.0123891273 }) } };
+		value_t expect = { { type_id::boolean },{ (double *)context.gc.add(new bool{ true }) } };
+		value_t ret;
+
+		not_equal_func(context, { val1, val2 }, ret);
+
+		AssertEqual(ret, expect, "Return value");
+	}
+	{
+		value_t val1 = { { type_id::integral },{ (double *)context.gc.add(new long long{ 12 }) } };
+		value_t val2 = { { type_id::integral },{ (double *)context.gc.add(new long long{ 123 }) } };
+		value_t expect = { { type_id::boolean },{ (double *)context.gc.add(new bool{ true }) } };
+		value_t ret;
+
+		not_equal_func(context, { val1, val2 }, ret);
+
+		AssertEqual(ret, expect, "Return value");
+	}
+}
+
+//inline void test_bigger() {
+//	using namespace cuttle::vm;
+//
+//	context_t context;
+//
+//	populate(context);
+//
+//	{
+//		value_t val1 = { { type_id::real },{ context.gc.add(new double{ 1.0123891723 }) } };
+//		value_t val2 = { { type_id::real },{ context.gc.add(new double{ 1.0123891723 }) } };
+//		value_t expect = { { type_id::boolean },{ (double *)context.gc.add(new bool{ false }) } };
+//		value_t ret;
+//
+//		not_equal_func(context, { val1, val2 }, ret);
+//
+//		AssertEqual(ret, expect, "Return value");
+//	}
+//	{
+//		value_t val1 = { { type_id::real },{ context.gc.add(new double{ 1.0123891723 }) } };
+//		value_t val2 = { { type_id::real },{ context.gc.add(new double{ 1.0123891273 }) } };
+//		value_t expect = { { type_id::boolean },{ (double *)context.gc.add(new bool{ true }) } };
+//		value_t ret;
+//
+//		not_equal_func(context, { val1, val2 }, ret);
+//
+//		AssertEqual(ret, expect, "Return value");
+//	}
+//	{
+//		value_t val1 = { { type_id::integral },{ (double *)context.gc.add(new long long{ 12 }) } };
+//		value_t val2 = { { type_id::integral },{ (double *)context.gc.add(new long long{ 123 }) } };
+//		value_t expect = { { type_id::boolean },{ (double *)context.gc.add(new bool{ false }) } };
+//		value_t ret;
+//
+//		not_equal_func(context, { val1, val2 }, ret);
+//
+//		AssertEqual(ret, expect, "Return value");
+//	}
+//}
+//
+//inline void test_smaller() {
+//	using namespace cuttle::vm;
+//
+//	context_t context;
+//
+//	populate(context);
+//
+//	{
+//		value_t val1 = { { type_id::real },{ context.gc.add(new double{ 1.0123891723 }) } };
+//		value_t val2 = { { type_id::real },{ context.gc.add(new double{ 1.0123891723 }) } };
+//		value_t expect = { { type_id::boolean },{ (double *)context.gc.add(new bool{ false }) } };
+//		value_t ret;
+//
+//		not_equal_func(context, { val1, val2 }, ret);
+//
+//		AssertEqual(ret, expect, "Return value");
+//	}
+//	{
+//		value_t val1 = { { type_id::real },{ context.gc.add(new double{ 1.0123891723 }) } };
+//		value_t val2 = { { type_id::real },{ context.gc.add(new double{ 1.0123891273 }) } };
+//		value_t expect = { { type_id::boolean },{ (double *)context.gc.add(new bool{ true }) } };
+//		value_t ret;
+//
+//		not_equal_func(context, { val1, val2 }, ret);
+//
+//		AssertEqual(ret, expect, "Return value");
+//	}
+//	{
+//		value_t val1 = { { type_id::integral },{ (double *)context.gc.add(new long long{ 12 }) } };
+//		value_t val2 = { { type_id::integral },{ (double *)context.gc.add(new long long{ 123 }) } };
+//		value_t expect = { { type_id::boolean },{ (double *)context.gc.add(new bool{ false }) } };
+//		value_t ret;
+//
+//		not_equal_func(context, { val1, val2 }, ret);
+//
+//		AssertEqual(ret, expect, "Return value");
+//	}
+//}
+
 void run_boolean_tests() {
 	TESTCASE;
 	test_equal();
+	test_not_equal();
+	//test_bigger(); TODO
+	//test_smaller();
+	//test_bigger_or_equal();
+	//test_smaller_or_equal();
 }
