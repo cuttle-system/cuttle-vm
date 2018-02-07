@@ -3,6 +3,37 @@
 #include <vector>
 #include "context_methods.hpp"
 #include "interpreter.hpp"
+#include "special_char_conversion_error.hpp"
+
+std::string convert_special_chars(std::string str) {
+	using namespace cuttle::vm;
+
+	std::string converted_str = "";
+	for (int i = 0; i < str.length(); ++i) {
+		if (str[i] == '\\') {
+			if (i >= str.length() - 1) {
+				throw special_char_conversion_error("Unexpected end of input");
+			}
+			++i;
+			switch (str[i]) {
+			case 'n':
+				converted_str += '\n';
+				break;
+			case 'r':
+				converted_str += '\r';
+				break;
+			case 't':
+				converted_str += '\t';
+				break;
+			default:
+				throw special_char_conversion_error("Unknown character '" + str[i] + std::string("'"));
+			}
+		} else {
+			converted_str += str[i];
+		}
+	}
+	return converted_str;
+}
 
 cuttle::vm::value_t parse_value(cuttle::vm::context_t& context, std::stringstream &input) {
 	using namespace cuttle::vm;
@@ -11,9 +42,11 @@ cuttle::vm::value_t parse_value(cuttle::vm::context_t& context, std::stringstrea
 	char type;
 	std::string str;
 	input >> type;
+	input.ignore(1);
 	getline(input, str);
 
-	value_t str_value = { {type_id::string}, {(double *) context.gc.add(new std::string(str))} };
+	std::string converted_str = convert_special_chars(str);
+	value_t str_value = { {type_id::string}, {(double *) context.gc.add(new std::string(converted_str))} };
 
 	// TODO: integral and boolean from string translation
 
@@ -53,9 +86,11 @@ void cuttle::vm::eval(std::stringstream &input, cuttle::vm::context_t &context, 
 		std::string func_name;
 		value_t ret;
 		input >> argn >> func_name;
-		std::vector<value_t> args(arg_stack.begin() + argn, arg_stack.end());
+		std::vector<value_t> args(arg_stack.begin() + (arg_stack.size() - argn), arg_stack.end());
 		call(context, func_name, args, ret);
-		arg_stack.clear();
+		while (argn--) {
+			arg_stack.pop_back();
+		}
 		arg_stack.push_back(ret);
 		break;
 	}
