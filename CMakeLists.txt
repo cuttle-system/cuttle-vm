@@ -31,9 +31,9 @@ endif()
 
 
 add_library(cuttle_vm SHARED ${SRCS} ${HEADERS})
-add_executable(tests ${TEST_SRCS} ${HEADERS} ${TEST_HEADERS})
+add_executable(cuttle_vm_tests ${TEST_SRCS} ${HEADERS} ${TEST_HEADERS})
 
 target_include_directories(cuttle_vm PRIVATE "src/")
-target_include_directories(tests PRIVATE "src/" "tests/")
+target_include_directories(cuttle_vm_tests PRIVATE "src/" "tests/")
 
-target_link_libraries(tests cuttle_vm)
+target_link_libraries(cuttle_vm_tests cuttle_vm)
