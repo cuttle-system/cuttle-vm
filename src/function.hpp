@@ -1,12 +1,13 @@
 #pragma once
 
 #include <vector>
+#include "value.hpp"
 
 namespace cuttle {
 	namespace vm {
 		struct context;
-		struct value;
+		struct value_t;
 
-		using function_ptr_t = int(struct context& context, const std::vector<struct value>& args, struct value& ret);
+		using function_ptr_t = int(context& context, const std::vector<value_t>& args, value_t& ret);
 	}
 }

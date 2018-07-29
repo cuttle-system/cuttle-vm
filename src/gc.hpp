@@ -17,10 +17,10 @@ namespace cuttle {
 
 			void clear() {
 				for (void *&ptr : ptrs) {
-					delete ptr;
-					ptr = NULL;
+					free(ptr);
+					ptr = nullptr;
 				}
-				ptrs = std::vector<void *>();
+				ptrs.clear();
 			}
 
 			std::vector<void *> ptrs;

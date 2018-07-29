@@ -14,11 +14,11 @@ int not_equal_func(context_t& context, const std::vector<value_t>& args, value_t
 }
 
 void register_boolean(context_t& context) {
-	value_t equal = { { { type_id::function },{ { type_id::any }, { type_id::any } } } };
+	value_t equal = { { type_id::function, { { type_id::any }, { type_id::any } } } };
 	equal.data.function = equal_func;
 	add(context, "==", equal);
 
-	value_t not_equal = { { { type_id::function },{ { type_id::any },{ type_id::any } } } };
+	value_t not_equal = { { type_id::function, { { type_id::any },{ type_id::any } } } };
 	not_equal.data.function = not_equal_func;
 	add(context, "!=", not_equal);
 }

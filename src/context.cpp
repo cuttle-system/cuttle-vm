@@ -1,6 +1,4 @@
 #include "context_methods.hpp"
-#include "type_error.hpp"
-#include "value_methods.hpp"
 #include "name_error.hpp"
 
 void cuttle::vm::add(context_t& context, const std::string& name, value_t& value) {
@@ -27,7 +25,7 @@ const cuttle::vm::value_t& cuttle::vm::get(context_t& context, const std::string
 
 int cuttle::vm::call(context& context, const std::string& name, const std::vector<value_t>& values, value_t& ret) {
 	std::vector<type_t> arg_types(values.size(), type_t());
-	for (int i = 0; i < values.size(); ++i) {
+	for (unsigned int i = 0; i < values.size(); ++i) {
 		arg_types[i] = values[i].type;
 	}
 	auto func = get(context, name, { type_id::function, arg_types});

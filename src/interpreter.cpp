@@ -4,12 +4,13 @@
 #include "context_methods.hpp"
 #include "interpreter.hpp"
 #include "special_char_conversion_error.hpp"
+#include "parse_error.hpp"
 
 std::string convert_special_chars(std::string str) {
 	using namespace cuttle::vm;
 
-	std::string converted_str = "";
-	for (int i = 0; i < str.length(); ++i) {
+	std::string converted_str;
+	for (unsigned int i = 0; i < str.length(); ++i) {
 		if (str[i] == '\\') {
 			if (i >= str.length() - 1) {
 				throw special_char_conversion_error("Unexpected end of input");
@@ -63,6 +64,8 @@ cuttle::vm::value_t parse_value(cuttle::vm::context_t& context, std::stringstrea
 	case 'b':
 		call(context, "boolean", { str_value }, val);
 		break;
+	default:
+		throw parse_error("Unknown type: " + type);
 	}
 
 	return val;
@@ -71,8 +74,13 @@ cuttle::vm::value_t parse_value(cuttle::vm::context_t& context, std::stringstrea
 void cuttle::vm::eval(std::stringstream &input, cuttle::vm::context_t &context, std::deque<cuttle::vm::value_t> &arg_stack) {
 	using namespace cuttle::vm;
 
-	char operation;
-	input >> operation;
+    int argn;
+    char operation;
+    value_t ret;
+    std::string func_name;
+    std::vector<value_t> args;
+
+    input >> operation;
 
 	switch (operation) {
 	case 'b':
@@ -82,16 +90,15 @@ void cuttle::vm::eval(std::stringstream &input, cuttle::vm::context_t &context, 
 		arg_stack.push_front(parse_value(context, input));
 		break;
 	case 'c':
-		int argn;
-		std::string func_name;
-		value_t ret;
 		input >> argn >> func_name;
-		std::vector<value_t> args(arg_stack.begin() + (arg_stack.size() - argn), arg_stack.end());
+		args = std::vector<value_t>(arg_stack.begin() + (arg_stack.size() - argn), arg_stack.end());
 		call(context, func_name, args, ret);
 		while (argn--) {
 			arg_stack.pop_back();
 		}
 		arg_stack.push_back(ret);
 		break;
+    default:
+        throw parse_error("Unknown operation: " + operation);
 	}
 }

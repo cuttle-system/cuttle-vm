@@ -7,15 +7,15 @@
 
 namespace cuttle {
 	namespace vm {
-		struct value;
+		struct value_t;
 
 		union data {
-			double *real;
+			double *real = nullptr;
 			long long *integral;
 			std::string *string;
 			bool *boolean;
 			char *byte;
-			std::vector<struct value> *array;
+			std::vector<value_t> *array;
 			function_ptr_t *function;
 		};
 
@@ -30,14 +30,14 @@ namespace cuttle {
 			any
 		};
 
-		using type_t = struct type {
+		struct type_t {
 			type_id id;
-			std::vector<struct type> children;
+			std::vector<type_t> children = {};
 		};
 
-		using value_t = struct value {
+		struct value_t {
 			type_t type;
-			union data data;
+			union data data = {nullptr};
 		};
 	}
 }

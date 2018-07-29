@@ -22,11 +22,11 @@ int integral_to_string_func(context_t& context, const std::vector<value_t>& args
 }
 
 void register_string(context_t& context) {
-	value_t real_to_string = { { { type_id::function },{ { type_id::real } } } };
+	value_t real_to_string = { { type_id::function, { { type_id::real } } } };
 	real_to_string.data.function = real_to_string_func;
 	add(context, "string", real_to_string);
 
-	value_t integral_to_string = { { { type_id::function },{ { type_id::string } } } };
+	value_t integral_to_string = { { type_id::function, { { type_id::string } } } };
 	integral_to_string.data.function = integral_to_string_func;
 	add(context, "string", integral_to_string);
 	
