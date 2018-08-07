@@ -11,7 +11,7 @@ namespace cuttle {
 		using variables_t = std::map < std::string, variable_types_map_t > ;
 		using context_t = struct context {
 			 variables_t variables;
-			 gc gc;
+			 gc_t gc;
 		};
 	}
 }

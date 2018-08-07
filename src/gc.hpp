@@ -4,8 +4,8 @@
 
 namespace cuttle {
 	namespace vm {
-		struct gc {
-			~gc() {
+		struct gc_t {
+			~gc_t() {
 				clear();
 			}
 
