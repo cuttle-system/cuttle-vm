@@ -27,7 +27,7 @@ std::string convert_special_chars(std::string str) {
 				converted_str += '\t';
 				break;
 			default:
-				throw special_char_conversion_error("Unknown character '" + str[i] + std::string("'"));
+				throw special_char_conversion_error(std::string("Unknown character '") + str[i] + "'");
 			}
 		} else {
 			converted_str += str[i];
@@ -53,19 +53,19 @@ cuttle::vm::value_t parse_value(cuttle::vm::context_t& context, std::stringstrea
 
 	switch (type) {
 	case 'i':
-		call(context, "integral", {str_value}, val);
+		call(context, "integral", {str_value}, 1, val);
 		break;
 	case 's':
 		val = str_value;
 		break;
 	case 'r':
-		call(context, "real", { str_value }, val);
+		call(context, "real", { str_value }, 1, val);
 		break;
 	case 'b':
-		call(context, "boolean", { str_value }, val);
+		call(context, "boolean", { str_value }, 1, val);
 		break;
 	default:
-		throw parse_error("Unknown type: " + type);
+		throw parse_error(std::string("Unknown type: ") + type);
 	}
 
 	return val;
@@ -74,7 +74,7 @@ cuttle::vm::value_t parse_value(cuttle::vm::context_t& context, std::stringstrea
 void cuttle::vm::eval(std::stringstream &input, cuttle::vm::context_t &context, std::deque<cuttle::vm::value_t> &arg_stack) {
 	using namespace cuttle::vm;
 
-    int argn;
+    unsigned int argn, type_argn;
     char operation;
     value_t ret;
     std::string func_name;
@@ -90,15 +90,15 @@ void cuttle::vm::eval(std::stringstream &input, cuttle::vm::context_t &context, 
 		arg_stack.push_front(parse_value(context, input));
 		break;
 	case 'c':
-		input >> argn >> func_name;
+		input >> argn >> type_argn >> func_name;
 		args = std::vector<value_t>(arg_stack.begin() + (arg_stack.size() - argn), arg_stack.end());
-		call(context, func_name, args, ret);
+		call(context, func_name, args, type_argn, ret);
 		while (argn--) {
 			arg_stack.pop_back();
 		}
 		arg_stack.push_back(ret);
 		break;
     default:
-        throw parse_error("Unknown operation: " + operation);
+        throw parse_error(std::string("Unknown operation: ") + operation);
 	}
 }

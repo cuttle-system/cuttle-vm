@@ -1,5 +1,6 @@
 #include "context_methods.hpp"
 #include "name_error.hpp"
+#include "type_argn_error.hpp"
 
 void cuttle::vm::add(context_t& context, const std::string& name, value_t& value) {
 	using namespace cuttle::vm;
@@ -23,9 +24,18 @@ const cuttle::vm::value_t& cuttle::vm::get(context_t& context, const std::string
 	return context.variables[name][type];
 }
 
-int cuttle::vm::call(context& context, const std::string& name, const std::vector<value_t>& values, value_t& ret) {
-	std::vector<type_t> arg_types(values.size(), type_t());
-	for (unsigned int i = 0; i < values.size(); ++i) {
+int cuttle::vm::call(
+    context& context,
+    const std::string& name,
+    const std::vector<value_t>& values,
+    unsigned int type_argn,
+    value_t& ret
+) {
+    if (type_argn > values.size()) {
+        throw type_argn_error("The type_argn is invalid for the values array passed");
+    }
+	std::vector<type_t> arg_types(type_argn, type_t());
+	for (unsigned int i = 0; i < type_argn; ++i) {
 		arg_types[i] = values[i].type;
 	}
 	auto func = get(context, name, { type_id::function, arg_types});

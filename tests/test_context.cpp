@@ -8,6 +8,7 @@
 #include "value_methods.hpp"
 #include "type_error.hpp"
 #include "name_error.hpp"
+#include "type_argn_error.hpp"
 
 using namespace cuttle::vm;
 
@@ -250,7 +251,7 @@ inline void test_call_function() {
 
 		add(context, "foo", func);
 
-		int status = call(context, "foo", {}, ret);
+		int status = call(context, "foo", {}, 0, ret);
 
 		AssertEqual(status, 0, "Status");
 		AssertEqual(ret, expect, "Return value");
@@ -271,7 +272,7 @@ inline void test_call_function() {
 
 		add(context, "foo", func);
 
-		int status = call(context, "foo", {arg}, ret);
+		int status = call(context, "foo", {arg}, 1, ret);
 
 		AssertEqual(status, 0, "Status");
 		AssertEqual(ret, expect, "Return value");
@@ -293,20 +294,134 @@ inline void test_get_variable_from_context_with_type_id_any() {
 
 		add(context, "foo", func);
 
-		int status = call(context, "foo", { { type_id::integral } }, ret);
+		int status = call(context, "foo", { { type_id::integral } }, 1, ret);
 
 		AssertEqual(status, 0, "Status");
 		AssertEqual(ret, expect, "Return value");
 
-		status = call(context, "foo", { { type_id::boolean } }, ret);
+		status = call(context, "foo", { { type_id::boolean } }, 1, ret);
 
 		AssertEqual(status, 0, "Status");
 		AssertEqual(ret, expect, "Return value");
 
 		AssertThrows(name_error, {
-			status = call(context, "foo", { {type_id::boolean}, {type_id::boolean} }, ret);
+			status = call(context, "foo", { {type_id::boolean}, {type_id::boolean} }, 2, ret);
 		});
 	}
+}
+
+inline void test_call_type_argn_arg_properly_handled() {
+	{
+		context_t context;
+		value_t func = { { type_id::function, { { type_id::integral } } } };
+		func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
+			ret.type = { type_id::boolean };
+			ret.data.boolean = context.gc.add(new bool{ true });
+			return 0;
+		};
+		value_t ret;
+		value_t expect = { { type_id::boolean } };
+		expect.data.boolean = context.gc.add(new bool{ true });
+
+		add(context, "foo", func);
+
+		int status = call(context, "foo", { { type_id::integral } }, 1, ret);
+
+		AssertEqual(status, 0, "Status");
+		AssertEqual(ret, expect, "Return value");
+
+		status = call(context, "foo", { { type_id::integral }, { type_id::integral } }, 1, ret);
+
+		AssertEqual(status, 0, "Status");
+		AssertEqual(ret, expect, "Return value");
+
+		AssertThrows(name_error, {
+			status = call(context, "foo", { {type_id::boolean} }, 1, ret);
+		});
+
+        AssertThrows(type_argn_error, {
+            status = call(context, "foo", { {type_id::boolean} }, 2, ret);
+        });
+
+        AssertThrows(type_argn_error, {
+            status = call(context, "foo", { {type_id::integral} }, 2, ret);
+        });
+	}
+    {
+        context_t context;
+        value_t func = { { type_id::function, { { type_id::integral } } } };
+        func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
+            long long value = 0;
+            for (auto arg : args) {
+                value += *arg.data.integral;
+            }
+            ret = { {type_id::integral}, (double *)new long long{value} };
+            return 0;
+        };
+        value_t ret;
+        value_t expect = { {type_id::integral}, (double *)new long long{111} };
+        std::vector<value_t> args {
+            { {type_id::integral}, (double *)context.gc.add(new long long{1}) },
+            { {type_id::integral}, (double *)context.gc.add(new long long{100}) },
+            { {type_id::integral}, (double *)context.gc.add(new long long{10}) }
+        };
+
+        add(context, "foo", func);
+
+        int status = call(context, "foo", args, 1, ret);
+
+        AssertEqual(status, 0, "Status");
+        AssertEqual(ret, expect, "Return value");
+    }
+    {
+        context_t context;
+        value_t func = { { type_id::function, { { type_id::any } } } };
+        func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
+            ret.type = { type_id::boolean };
+            ret.data.boolean = context.gc.add(new bool{ true });
+            return 0;
+        };
+        value_t ret;
+        value_t expect = { { type_id::boolean } };
+        expect.data.boolean = context.gc.add(new bool{ true });
+
+        add(context, "foo", func);
+
+        int status = call(context, "foo", { { type_id::integral } }, 1, ret);
+
+        AssertEqual(status, 0, "Status");
+        AssertEqual(ret, expect, "Return value");
+
+        status = call(context, "foo", { { type_id::integral }, { type_id::boolean } }, 1, ret);
+
+        AssertEqual(status, 0, "Status");
+        AssertEqual(ret, expect, "Return value");
+
+        status = call(context, "foo", { { type_id::integral }, { type_id::boolean } }, 1, ret);
+
+        AssertEqual(status, 0, "Status");
+        AssertEqual(ret, expect, "Return value");
+
+        status = call(context, "foo", { { type_id::array }, { type_id::boolean } }, 1, ret);
+
+        AssertEqual(status, 0, "Status");
+        AssertEqual(ret, expect, "Return value");
+
+        status = call(context, "foo", { { type_id::array }, { type_id::integral }, { type_id::boolean } }, 1, ret);
+
+        AssertEqual(status, 0, "Status");
+        AssertEqual(ret, expect, "Return value");
+
+        status = call(context, "foo", { { type_id::array }, { type_id::integral }, { type_id::boolean }, { type_id::real } }, 1, ret);
+
+        AssertEqual(status, 0, "Status");
+        AssertEqual(ret, expect, "Return value");
+
+        status = call(context, "foo", { { type_id::real }, { type_id::real }, { type_id::real }, { type_id::real } }, 1, ret);
+
+        AssertEqual(status, 0, "Status");
+        AssertEqual(ret, expect, "Return value");
+    }
 }
 
 void run_context_tests() {
@@ -318,4 +433,5 @@ void run_context_tests() {
 	test_get_variable_from_context_throws_name_error();
 	test_get_variable_from_context_with_type_id_any();
 	test_call_function();
+	test_call_type_argn_arg_properly_handled();
 }

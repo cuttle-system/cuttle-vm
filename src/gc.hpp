@@ -17,7 +17,7 @@ namespace cuttle {
 
 			void clear() {
 				for (void *&ptr : ptrs) {
-					free(ptr);
+					delete ptr;
 					ptr = nullptr;
 				}
 				ptrs.clear();

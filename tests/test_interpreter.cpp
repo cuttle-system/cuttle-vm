@@ -56,7 +56,7 @@ inline void test_can_call_functions() {
 
 	{
 		std::stringstream input1("b r 100.0");
-		std::stringstream input2("c 1 string");
+		std::stringstream input2("c 1 1 string");
 		std::deque<value_t> arg_stack;
 		value_t val1 = value_t{ { type_id::string },{ (double *) context.gc.add(new std::string("100.000000")) } };
 		eval(input1, context, arg_stack);
@@ -64,7 +64,7 @@ inline void test_can_call_functions() {
 		AssertEqual(arg_stack, std::deque<value_t>{val1}, "Argument stack");
 	}
 	{
-		std::stringstream input("b r 100.0\nb r 101.0\nb r 19.012383\nc 1 string");
+		std::stringstream input("b r 100.0\nb r 101.0\nb r 19.012383\nc 1 1 string");
 		std::deque<value_t> arg_stack;
 		value_t val1 = value_t{ { type_id::real },{ context.gc.add(new double(100.0)) } };
 		value_t val2 = value_t{ { type_id::real },{ context.gc.add(new double(101.0)) } };
@@ -90,8 +90,36 @@ inline void test_can_call_functions() {
 	}
 }
 
+inline void test_can_call_functions_with_type_argn_less_than_argn() {
+	using namespace cuttle::vm;
+
+	context_t context;
+	populate(context);
+
+	{
+		std::stringstream input1("b r 100.0");
+		std::stringstream input2("b r 200.0");
+		std::stringstream input3("b r 300.0");
+		std::stringstream input4("c 3 0 array");
+		std::deque<value_t> arg_stack;
+		value_t val1 = value_t{ { type_id::array, { {type_id::real} } },
+            (double *) new std::vector<value_t>{
+                { {type_id::real}, context.gc.add(new double(100.0)) },
+                { {type_id::real}, context.gc.add(new double(200.0)) },
+                { {type_id::real}, context.gc.add(new double(300.0)) },
+		    }
+		};
+		eval(input1, context, arg_stack);
+		eval(input2, context, arg_stack);
+		eval(input3, context, arg_stack);
+		eval(input4, context, arg_stack);
+		AssertEqual(arg_stack, std::deque<value_t>{val1}, "Argument stack");
+	}
+}
+
 void run_interpreter_tests() {
     TESTCASE
     test_can_push_back_to_stack();
 	test_can_call_functions();
+	test_can_call_functions_with_type_argn_less_than_argn();
 }
