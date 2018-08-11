@@ -11,7 +11,6 @@ std::vector<type_t> array_construct_type_children(const std::vector<value_t>& ar
     for (i = args.size() - 2; i >= 0; --i) {
         if (args[i + 1].type != args[i].type) {
             children.push_back(args[i + 1].type);
-            ++i;
             break;
         }
     }

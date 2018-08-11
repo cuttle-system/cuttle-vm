@@ -10,6 +10,6 @@ void run_std_tests() {
 	std::cout << "----- testing standard library -----" << std::endl;
 	run_real_tests();
 	run_boolean_tests();
-//	run_array_tests();
-	//run_integral_tests();
+	run_array_tests();
+    //run_integral_tests();
 }
