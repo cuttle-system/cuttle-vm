@@ -9,7 +9,7 @@ int real_to_string_func(context_t& context, const std::vector<value_t>& args, va
 	std::ostringstream oss;
 	oss << std::fixed << *args[0].data.real;
 	ret = { { type_id::string } };
-	ret.data.string = context.gc.add(new std::string{ oss.str() });
+	ret.data.string = context.gc.add_r(new std::string{ oss.str() });
 	return 0;
 }
 
@@ -17,7 +17,7 @@ int integral_to_string_func(context_t& context, const std::vector<value_t>& args
 	std::ostringstream oss;
 	oss << *args[0].data.integral;
 	ret = { { type_id::string } };
-	ret.data.string = context.gc.add(new std::string{ oss.str() });
+	ret.data.string = context.gc.add_r(new std::string{ oss.str() });
 	return 0;
 }
 

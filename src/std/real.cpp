@@ -4,34 +4,34 @@
 using namespace cuttle::vm;
 
 int real_plus_func(context_t& context, const std::vector<value_t>& args, value_t& ret) {
-	ret = { {type_id::real}, {context.gc.add(new double{*args[0].data.real + *args[1].data.real})} };
+	ret = { {type_id::real}, {context.gc.add(new real_t{*args[0].data.real + *args[1].data.real})} };
 	return 0;
 }
 
 int real_minus_func(context_t& context, const std::vector<value_t>& args, value_t& ret) {
-	ret = { { type_id::real }, { context.gc.add(new double{ *args[0].data.real - *args[1].data.real }) } };
+	ret = { { type_id::real }, { context.gc.add(new real_t{ *args[0].data.real - *args[1].data.real }) } };
 	return 0;
 }
 
 int real_multiply_func(context_t& context, const std::vector<value_t>& args, value_t& ret) {
-	ret = { { type_id::real }, { context.gc.add(new double{ *args[0].data.real * *args[1].data.real }) } };
+	ret = { { type_id::real }, { context.gc.add(new real_t{ *args[0].data.real * *args[1].data.real }) } };
 	return 0;
 }
 
 int real_divide_func(context_t& context, const std::vector<value_t>& args, value_t& ret) {
-	ret = { { type_id::real }, { context.gc.add(new double{ *args[0].data.real / *args[1].data.real }) } };
+	ret = { { type_id::real }, { context.gc.add(new real_t{ *args[0].data.real / *args[1].data.real }) } };
 	return 0;
 }
 
 int string_to_real_func(context_t& context, const std::vector<value_t>& args, value_t& ret) {
 	ret = { {type_id::real} };
-	ret.data.real = context.gc.add(new double{ atof(args[0].data.string->c_str()) }); // TODO: try strtod (enable number format check)
+	ret.data.real = context.gc.add_r(new real_t{ atof(args[0].data.string->c_str()) }); // TODO: try strtod (enable number format check)
 	return 0;
 }
 
 int integral_to_real_func(context_t& context, const std::vector<value_t>& args, value_t& ret) {
 	ret = { { type_id::real } };
-	ret.data.real = context.gc.add(new double{ (double) *args[0].data.integral });
+	ret.data.real = context.gc.add_r(new real_t{ (real_t) *args[0].data.integral });
 	return 0;
 }
 

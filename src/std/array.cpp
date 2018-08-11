@@ -25,10 +25,10 @@ std::vector<type_t> array_construct_type_children(const std::vector<value_t>& ar
 }
 
 int array_func(context_t& context, const std::vector<value_t>& args, value_t& ret) {
-    std::vector<value_t> *value = context.gc.add(
+    std::vector<value_t> *value = context.gc.add_r(
         new std::vector<value_t>(args)
     );
-    ret = { { type_id::array, array_construct_type_children(args) },{ (double *) value } };
+    ret = { { type_id::array, array_construct_type_children(args) },{ (real_t *) value } };
     return 0;
 }
 

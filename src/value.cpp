@@ -23,7 +23,7 @@ bool cuttle::vm::operator==(const value_t& left, const value_t& right) {
 	case type_id::integral:
 		return *left.data.integral == *right.data.integral;
 	case type_id::real:
-		return std::abs(*left.data.real - *right.data.real) < std::numeric_limits<double>::epsilon() * std::max({
+		return std::abs(*left.data.real - *right.data.real) < std::numeric_limits<real_t>::epsilon() * std::max({
 			*left.data.real,
 			*right.data.real,
 			1.0

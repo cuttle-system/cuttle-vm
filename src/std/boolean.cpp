@@ -4,12 +4,12 @@
 using namespace cuttle::vm;
 
 int equal_func(context_t& context, const std::vector<value_t>& args, value_t& ret) {
-	ret = { { type_id::boolean },{ (double *) context.gc.add(new bool{ args[0] == args[1] }) } };
+	ret = { { type_id::boolean },{ context.gc.add(new bool{ args[0] == args[1] }) } };
 	return 0;
 }
 
 int not_equal_func(context_t& context, const std::vector<value_t>& args, value_t& ret) {
-	ret = { { type_id::boolean },{ (double *)context.gc.add(new bool{ args[0] != args[1] }) } };
+	ret = { { type_id::boolean },{ context.gc.add(new bool{ args[0] != args[1] }) } };
 	return 0;
 }
 
