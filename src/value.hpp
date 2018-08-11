@@ -43,6 +43,10 @@ namespace cuttle {
 			function
 		};
 
+		/*
+		 * Note: type children can't be type_id::any because then they can't be found by an implemented context structure.
+		 * Also, the runtime check will have too big impact on performance, so it is not implemented
+		 */
 		struct type_t {
 			type_id id;
 			std::vector<type_t> children = {};
