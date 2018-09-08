@@ -1,9 +1,11 @@
-#include <string>
+#define BOOST_TEST_DYN_LINK
+
 #include <iostream>
+#include <boost/test/unit_test.hpp>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "test.hpp"
 #include "context_methods.hpp"
 #include "value_methods.hpp"
 #include "type_error.hpp"
@@ -12,9 +14,13 @@
 
 using namespace cuttle::vm;
 
-inline void test_add_variable_to_context() {
-	{
-		context_t context;
+struct context_fixture {
+    context_t context;
+};
+
+BOOST_FIXTURE_TEST_SUITE(add_variable_to_context_suite, context_fixture)
+
+    BOOST_AUTO_TEST_CASE(case1) {
 		value_t val = { {type_id::integral} };
 		value_t val2 = { {type_id::integral} };
 
@@ -23,11 +29,11 @@ inline void test_add_variable_to_context() {
 
 		add(context, "foo", val);
 
-		AssertEqual(context.variables["foo"][val.type], val, "Value");
-		AssertNotEqual(context.variables["foo"][val.type], val2, "Another value");
+		BOOST_CHECK(context.variables["foo"][val.type] == val);
+		BOOST_CHECK(context.variables["foo"][val.type] != val2);
 	}
-	{
-		context_t context;
+
+    BOOST_AUTO_TEST_CASE(case2) {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::integral } };
 		value_t val3 = { { type_id::integral } };
@@ -38,11 +44,11 @@ inline void test_add_variable_to_context() {
 		
 		add(context, "foo", val);
 
-		AssertEqual(context.variables["foo"][val.type], val2, "Value");
-		AssertNotEqual(context.variables["foo"][val.type], val3, "Another value");
+		BOOST_CHECK(context.variables["foo"][val.type] == val2);
+		BOOST_CHECK(context.variables["foo"][val.type] != val3);
 	}
-	{
-		context_t context;
+
+    BOOST_AUTO_TEST_CASE(case3) {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::integral } };
 		value_t val3 = { { type_id::integral } };
@@ -55,12 +61,12 @@ inline void test_add_variable_to_context() {
 		add(context, "bar", val2);
 		add(context, "baz", val3);
 
-		AssertEqual(context.variables["foo"][val.type], val, "Value");
-		AssertEqual(context.variables["bar"][val2.type], val2, "Value");
-		AssertEqual(context.variables["baz"][val3.type], val3, "Value");
+		BOOST_CHECK(context.variables["foo"][val.type] == val);
+		BOOST_CHECK(context.variables["bar"][val2.type] == val2);
+		BOOST_CHECK(context.variables["baz"][val3.type] == val3);
 	}
-	{
-		context_t context;
+
+    BOOST_AUTO_TEST_CASE(case4) {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::integral } };
 
@@ -68,17 +74,18 @@ inline void test_add_variable_to_context() {
 		val2.data.integral = context.gc.add_r(new integral_t{ 2 });
 
 		add(context, "foo", val);
-		AssertEqual(context.variables["foo"][val.type], val, "Value");
-		AssertThrows(type_error, {
+		BOOST_CHECK(context.variables["foo"][val.type] == val);
+		BOOST_CHECK_THROW(do {
 			add(context, "foo", val2);
-		});
-		AssertEqual(context.variables["foo"][val.type], val, "Value");
+		} while (0), type_error);
+		BOOST_CHECK(context.variables["foo"][val.type] == val);
 	}
-}
 
-inline void test_add_variable_to_context_with_one_name_and_different_types() {
-	{
-		context_t context;
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(add_variable_to_context_with_one_name_and_different_types_suite, context_fixture)
+
+    BOOST_AUTO_TEST_CASE(case1) {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::string } };
 
@@ -88,11 +95,11 @@ inline void test_add_variable_to_context_with_one_name_and_different_types() {
 		add(context, "foo", val);
 		add(context, "foo", val2);
 
-		AssertEqual(context.variables["foo"][val.type], val, "Integral value");
-		AssertEqual(context.variables["foo"][val2.type], val2, "String value");
+		BOOST_CHECK(context.variables["foo"][val.type] == val);
+		BOOST_CHECK(context.variables["foo"][val2.type] == val2);
 	}
-	{
-		context_t context;
+
+    BOOST_AUTO_TEST_CASE(case2) {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::string } };
 
@@ -105,17 +112,18 @@ inline void test_add_variable_to_context_with_one_name_and_different_types() {
 		add(context, "bar", val);
 		add(context, "bar", val2);
 
-		AssertEqual(context.variables["foo"][val.type], val, "Integral value");
-		AssertEqual(context.variables["foo"][val2.type], val2, "String value");
+		BOOST_CHECK(context.variables["foo"][val.type] == val);
+		BOOST_CHECK(context.variables["foo"][val2.type] == val2);
 
-		AssertEqual(context.variables["bar"][val.type], val, "Integral value");
-		AssertEqual(context.variables["bar"][val2.type], val2, "String value");
+		BOOST_CHECK(context.variables["bar"][val.type] == val);
+		BOOST_CHECK(context.variables["bar"][val2.type] == val2);
 	}
-}
 
-inline void test_get_variable_from_context() {
-	{
-		context_t context;
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(get_variable_from_context_suite, context_fixture)
+
+    BOOST_AUTO_TEST_CASE(case1) {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::integral } };
 
@@ -124,11 +132,11 @@ inline void test_get_variable_from_context() {
 
 		add(context, "foo", val);
 
-		AssertEqual(get(context, "foo", val.type), val, "Value");
-		AssertNotEqual(get(context, "foo", val.type), val2, "Another value");
+		BOOST_CHECK(get(context, "foo", val.type) == val);
+		BOOST_CHECK(get(context, "foo", val.type) != val2);
 	}
-	{
-		context_t context;
+
+    BOOST_AUTO_TEST_CASE(case2) {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::integral } };
 		value_t val3 = { { type_id::integral } };
@@ -139,11 +147,11 @@ inline void test_get_variable_from_context() {
 
 		add(context, "foo", val);
 
-		AssertEqual(get(context, "foo", val.type), val2, "Value");
-		AssertNotEqual(get(context, "foo", val.type), val3, "Another value");
+		BOOST_CHECK(get(context, "foo", val.type) == val2);
+		BOOST_CHECK(get(context, "foo", val.type) != val3);
 	}
-	{
-		context_t context;
+
+    BOOST_AUTO_TEST_CASE(case3) {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::integral } };
 		value_t val3 = { { type_id::integral } };
@@ -156,15 +164,16 @@ inline void test_get_variable_from_context() {
 		add(context, "bar", val2);
 		add(context, "baz", val3);
 
-		AssertEqual(get(context, "foo", val.type), val, "Value");
-		AssertEqual(get(context, "bar", val2.type), val2, "Value");
-		AssertEqual(get(context, "baz", val3.type), val3, "Value");
+		BOOST_CHECK(get(context, "foo", val.type) == val);
+		BOOST_CHECK(get(context, "bar", val2.type) == val2);
+		BOOST_CHECK(get(context, "baz", val3.type) == val3);
 	}
-}
 
-inline void test_get_variable_from_context_with_one_name_and_different_types() {
-	{
-		context_t context;
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(get_variable_from_context_with_one_name_and_different_types_suite, context_fixture)
+
+    BOOST_AUTO_TEST_CASE(case1) {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::string } };
 
@@ -174,11 +183,11 @@ inline void test_get_variable_from_context_with_one_name_and_different_types() {
 		add(context, "foo", val);
 		add(context, "foo", val2);
 
-		AssertEqual(get(context, "foo", val.type), val, "Integral value");
-		AssertEqual(get(context, "foo", val2.type), val2, "String value");
+		BOOST_CHECK(get(context, "foo", val.type) == val);
+		BOOST_CHECK(get(context, "foo", val2.type) == val2);
 	}
-	{
-		context_t context;
+
+    BOOST_AUTO_TEST_CASE(case2) {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::string } };
 
@@ -191,24 +200,24 @@ inline void test_get_variable_from_context_with_one_name_and_different_types() {
 		add(context, "bar", val);
 		add(context, "bar", val2);
 
-		AssertEqual(get(context, "foo", val.type), val, "Integral value");
-		AssertEqual(get(context, "foo", val2.type), val2, "String value");
+		BOOST_CHECK(get(context, "foo", val.type) == val);
+		BOOST_CHECK(get(context, "foo", val2.type) == val2);
 
-		AssertEqual(get(context, "bar", val.type), val, "Integral value");
-		AssertEqual(get(context, "bar", val2.type), val2, "String value");
+		BOOST_CHECK(get(context, "bar", val.type) == val);
+		BOOST_CHECK(get(context, "bar", val2.type) == val2);
 	}
-}
 
-inline void test_get_variable_from_context_throws_name_error() {
-	{
-		context_t context;
-		
-		AssertThrows(name_error, {
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(get_variable_from_context_throws_name_error_suite, context_fixture)
+
+    BOOST_AUTO_TEST_CASE(case1) {
+		BOOST_CHECK_THROW(do {
 			get(context, "foo", {type_id::integral});
-		});
+		} while (0), name_error);
 	}
-	{
-		context_t context;
+
+    BOOST_AUTO_TEST_CASE(case2) {
 		value_t val = { { type_id::integral } };
 		value_t val2 = { { type_id::string } };
 
@@ -218,27 +227,28 @@ inline void test_get_variable_from_context_throws_name_error() {
 		add(context, "foo", val);
 		add(context, "foo", val2);
 
-		AssertThrows(name_error, {
+		BOOST_CHECK_THROW(do {
 			get(context, "foo",{ type_id::function });
-		});
+		} while (0), name_error);
 	}
-	{
-		context_t context;
+
+    BOOST_AUTO_TEST_CASE(case3) {
 		value_t val = { { type_id::integral } };
 
 		val.data.integral = context.gc.add_r(new integral_t{ 1 });
 
 		add(context, "foo", val);
 
-		AssertThrows(name_error, {
+		BOOST_CHECK_THROW(do {
 			get(context, "foo",{ type_id::real });
-		});
+		} while (0), name_error);
 	}
-}
 
-inline void test_call_function() {
-	{
-		context_t context;
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(call_function_suite, context_fixture)
+
+    BOOST_AUTO_TEST_CASE(case1) {
 		value_t func = { {type_id::function} };
 		func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
 			ret.type = { type_id::integral };
@@ -253,11 +263,11 @@ inline void test_call_function() {
 
 		int status = call(context, "foo", {}, 0, ret);
 
-		AssertEqual(status, 0, "Status");
-		AssertEqual(ret, expect, "Return value");
+		BOOST_CHECK(status == 0);
+		BOOST_CHECK(ret == expect);
 	}
-	{
-		context_t context;
+
+    BOOST_AUTO_TEST_CASE(case2) {
 		value_t func = { { type_id::function, {{type_id::integral}} } };
 		func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
 			ret.type = { type_id::integral };
@@ -274,14 +284,15 @@ inline void test_call_function() {
 
 		int status = call(context, "foo", {arg}, 1, ret);
 
-		AssertEqual(status, 0, "Status");
-		AssertEqual(ret, expect, "Return value");
+		BOOST_CHECK(status == 0);
+		BOOST_CHECK(ret == expect);
 	}
-}
 
-inline void test_get_variable_from_context_with_type_id_any() {
-	{
-		context_t context;
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(get_variable_from_context_with_type_id_any_suite, context_fixture)
+
+    BOOST_AUTO_TEST_CASE(case1) {
 		value_t func = { { type_id::function, { { type_id::any } } } };
 		func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
 			ret.type = { type_id::integral };
@@ -296,23 +307,24 @@ inline void test_get_variable_from_context_with_type_id_any() {
 
 		int status = call(context, "foo", { { type_id::integral } }, 1, ret);
 
-		AssertEqual(status, 0, "Status");
-		AssertEqual(ret, expect, "Return value");
+		BOOST_CHECK(status == 0);
+		BOOST_CHECK(ret == expect);
 
 		status = call(context, "foo", { { type_id::boolean } }, 1, ret);
 
-		AssertEqual(status, 0, "Status");
-		AssertEqual(ret, expect, "Return value");
+		BOOST_CHECK(status == 0);
+		BOOST_CHECK(ret == expect);
 
-		AssertThrows(name_error, {
+		BOOST_CHECK_THROW(do {
 			status = call(context, "foo", { {type_id::boolean}, {type_id::boolean} }, 2, ret);
-		});
+		} while (0), name_error);
 	}
-}
 
-inline void test_call_type_argn_arg_properly_handled() {
-	{
-		context_t context;
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(call_type_argn_arg_properly_handled_suite, context_fixture)
+
+    BOOST_AUTO_TEST_CASE(case1) {
 		value_t func = { { type_id::function, { { type_id::integral } } } };
 		func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
 			ret.type = { type_id::boolean };
@@ -327,28 +339,28 @@ inline void test_call_type_argn_arg_properly_handled() {
 
 		int status = call(context, "foo", { { type_id::integral } }, 1, ret);
 
-		AssertEqual(status, 0, "Status");
-		AssertEqual(ret, expect, "Return value");
+		BOOST_CHECK(status == 0);
+		BOOST_CHECK(ret == expect);
 
 		status = call(context, "foo", { { type_id::integral }, { type_id::integral } }, 1, ret);
 
-		AssertEqual(status, 0, "Status");
-		AssertEqual(ret, expect, "Return value");
+		BOOST_CHECK(status == 0);
+		BOOST_CHECK(ret == expect);
 
-		AssertThrows(name_error, {
+		BOOST_CHECK_THROW(do {
 			status = call(context, "foo", { {type_id::boolean} }, 1, ret);
-		});
+		} while (0), name_error);
 
-        AssertThrows(type_argn_error, {
+        BOOST_CHECK_THROW(do {
             status = call(context, "foo", { {type_id::boolean} }, 2, ret);
-        });
+        } while (0), type_argn_error);
 
-        AssertThrows(type_argn_error, {
+        BOOST_CHECK_THROW(do {
             status = call(context, "foo", { {type_id::integral} }, 2, ret);
-        });
+        } while (0), type_argn_error);
 	}
-    {
-        context_t context;
+
+	BOOST_AUTO_TEST_CASE(case2) {
         value_t func = { { type_id::function, { { type_id::integral } } } };
         func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
             integral_t value = 0;
@@ -370,11 +382,11 @@ inline void test_call_type_argn_arg_properly_handled() {
 
         int status = call(context, "foo", args, 1, ret);
 
-        AssertEqual(status, 0, "Status");
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(status == 0);
+        BOOST_CHECK(ret == expect);
     }
-    {
-        context_t context;
+
+    BOOST_AUTO_TEST_CASE(case3) {
         value_t func = { { type_id::function, { { type_id::any } } } };
         func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
             ret.type = { type_id::boolean };
@@ -389,49 +401,38 @@ inline void test_call_type_argn_arg_properly_handled() {
 
         int status = call(context, "foo", { { type_id::integral } }, 1, ret);
 
-        AssertEqual(status, 0, "Status");
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(status == 0);
+        BOOST_CHECK(ret == expect);
 
         status = call(context, "foo", { { type_id::integral }, { type_id::boolean } }, 1, ret);
 
-        AssertEqual(status, 0, "Status");
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(status == 0);
+        BOOST_CHECK(ret == expect);
 
         status = call(context, "foo", { { type_id::integral }, { type_id::boolean } }, 1, ret);
 
-        AssertEqual(status, 0, "Status");
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(status == 0);
+        BOOST_CHECK(ret == expect);
 
         status = call(context, "foo", { { type_id::array }, { type_id::boolean } }, 1, ret);
 
-        AssertEqual(status, 0, "Status");
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(status == 0);
+        BOOST_CHECK(ret == expect);
 
         status = call(context, "foo", { { type_id::array }, { type_id::integral }, { type_id::boolean } }, 1, ret);
 
-        AssertEqual(status, 0, "Status");
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(status == 0);
+        BOOST_CHECK(ret == expect);
 
         status = call(context, "foo", { { type_id::array }, { type_id::integral }, { type_id::boolean }, { type_id::real } }, 1, ret);
 
-        AssertEqual(status, 0, "Status");
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(status == 0);
+        BOOST_CHECK(ret == expect);
 
         status = call(context, "foo", { { type_id::real }, { type_id::real }, { type_id::real }, { type_id::real } }, 1, ret);
 
-        AssertEqual(status, 0, "Status");
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(status == 0);
+        BOOST_CHECK(ret == expect);
     }
-}
 
-void run_context_tests() {
-	TESTCASE
-	test_add_variable_to_context();
-	test_add_variable_to_context_with_one_name_and_different_types();
-	test_get_variable_from_context();
-	test_get_variable_from_context_with_one_name_and_different_types();
-	test_get_variable_from_context_throws_name_error();
-	test_get_variable_from_context_with_type_id_any();
-	test_call_function();
-	test_call_type_argn_arg_properly_handled();
-}
+BOOST_AUTO_TEST_SUITE_END()

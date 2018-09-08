@@ -1,117 +1,122 @@
+#define BOOST_TEST_DYN_LINK
+
 #include <iostream>
+#include <boost/test/unit_test.hpp>
 #include <fstream>
 #include <string>
-#include "test.hpp"
-#include "test_array.hpp"
 #include "context.hpp"
 #include "std.hpp"
 #include "std/array.cpp"
 
 using namespace std;
+using namespace cuttle::vm;
 
-inline void test_array_construct_type_children_works_properly_with_empty_or_one_args() {
-    using namespace cuttle::vm;
-
+struct context_fixture {
     context_t context;
 
-    populate(context);
+    void setup() {
+        populate(context);
+    }
+};
 
-    {
+BOOST_FIXTURE_TEST_SUITE(array_construct_type_children_works_properly_with_empty_or_one_args_suite, context_fixture)
+
+    BOOST_AUTO_TEST_CASE(case1) {
         std::vector<value_t> args;
         std::vector<type_t> expect;
         auto ret = array_construct_type_children(args);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-    {
+
+    BOOST_AUTO_TEST_CASE(case2) {
         std::vector<value_t> args { { {type_id::real}, context.gc.add(new real_t {1238912.1239})} };
         std::vector<type_t> expect = { {type_id::real } };
         auto ret = array_construct_type_children(args);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-    {
+
+    BOOST_AUTO_TEST_CASE(case3) {
         std::vector<value_t> args { { {type_id::boolean}, context.gc.add((real_t *)new bool {true})} };
         std::vector<type_t> expect = { {type_id::boolean } };
         auto ret = array_construct_type_children(args);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-    {
+
+    BOOST_AUTO_TEST_CASE(case4) {
         std::vector<value_t> args { { {type_id::integral}, context.gc.add((real_t *)new integral_t {3ll})} };
         std::vector<type_t> expect = { {type_id::integral } };
         auto ret = array_construct_type_children(args);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-    {
+
+    BOOST_AUTO_TEST_CASE(case5) {
         std::vector<value_t> args { { {type_id::string}, context.gc.add((real_t *)new std::string("foo"))} };
         std::vector<type_t> expect = { {type_id::string} };
         auto ret = array_construct_type_children(args);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-    {
+
+    BOOST_AUTO_TEST_CASE(case6) {
         std::vector<value_t> args { { {type_id::array}, context.gc.add((real_t *)new std::vector<value_t>)} };
         std::vector<type_t> expect = { {type_id::array} };
         auto ret = array_construct_type_children(args);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-}
 
-inline void test_array_construct_type_children_works_properly_with_two_or_more_args() {
-    using namespace cuttle::vm;
+BOOST_AUTO_TEST_SUITE_END()
 
-    context_t context;
+BOOST_FIXTURE_TEST_SUITE(array_construct_type_children_works_properly_with_two_or_more_args_suite, context_fixture)
 
-    populate(context);
-
-    {
+    BOOST_AUTO_TEST_CASE(case1) {
         value_t arg1 = { {type_id::real}, context.gc.add(new real_t {1238912.1239})};
         value_t arg2 = { {type_id::real}, context.gc.add(new real_t {123812312.100})};
         value_t arg3 = { {type_id::real}, context.gc.add(new real_t {122.15639})};
         std::vector<type_t> expect = { {type_id::real} };
         auto ret = array_construct_type_children({ arg1, arg2, arg3 });
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-    {
+
+    BOOST_AUTO_TEST_CASE(case2) {
         value_t arg1 = { {type_id::real}, context.gc.add(new real_t {1238912.1239})};
         value_t arg2 = { {type_id::real}, context.gc.add(new real_t {123812312.100})};
         std::vector<type_t> expect = { {type_id::real} };
         auto ret = array_construct_type_children({ arg1, arg2 });
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-    {
+
+    BOOST_AUTO_TEST_CASE(case3) {
         value_t arg1 = { {type_id::real}, context.gc.add(new real_t {1238912.1239})};
         value_t arg2 = { {type_id::real}, context.gc.add(new real_t {123812312.100})};
         value_t arg3 = { {type_id::boolean}, context.gc.add((real_t *) new bool{true})};
         std::vector<type_t> expect = { {type_id::real}, {type_id::real}, {type_id::boolean} };
         auto ret = array_construct_type_children({ arg1, arg2, arg3 });
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-    {
+
+    BOOST_AUTO_TEST_CASE(case4) {
         value_t arg1 = { {type_id::boolean}, context.gc.add((real_t *) new bool {true})};
         value_t arg2 = { {type_id::real}, context.gc.add(new real_t {123812312.100})};
         value_t arg3 = { {type_id::real}, context.gc.add(new real_t {1238912.1239})};
         std::vector<type_t> expect = { {type_id::boolean}, {type_id::real}, };
         auto ret = array_construct_type_children({ arg1, arg2, arg3 });
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-}
 
-inline void test_array_creates_new_array_from_empty_or_one_args() {
-	using namespace cuttle::vm;
+BOOST_AUTO_TEST_SUITE_END()
 
-	context_t context;
+BOOST_FIXTURE_TEST_SUITE(array_creates_new_array_from_empty_or_one_args_suite, context_fixture)
 
-	populate(context);
-
-	{
+    BOOST_AUTO_TEST_CASE(case1) {
 		value_t expect = { { type_id::array }, {
 		    context.gc.add(new std::vector<value_t>)
          } };
@@ -119,9 +124,10 @@ inline void test_array_creates_new_array_from_empty_or_one_args() {
 
 		array_func(context, { }, ret);
 
-		AssertEqual(ret, expect, "Return value");
+		BOOST_CHECK(ret == expect);
 	}
-    {
+
+    BOOST_AUTO_TEST_CASE(case2) {
         value_t arg1 = { {type_id::real}, context.gc.add(new real_t {1238912.1239})};
         value_t expect = { { type_id::array, { {type_id::real} } },{
             context.gc.add(new std::vector<value_t> {
@@ -132,9 +138,10 @@ inline void test_array_creates_new_array_from_empty_or_one_args() {
 
         array_func(context, { arg1 }, ret);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-    {
+
+    BOOST_AUTO_TEST_CASE(case3) {
         value_t arg1 = { {type_id::boolean}, context.gc.add((real_t *) new bool {true})};
         value_t expect = { { type_id::array, { {type_id::boolean} } },{
              context.gc.add(new std::vector<value_t> {
@@ -145,9 +152,10 @@ inline void test_array_creates_new_array_from_empty_or_one_args() {
 
         array_func(context, { arg1 }, ret);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-    {
+
+    BOOST_AUTO_TEST_CASE(case4) {
         value_t arg1 = { {type_id::array}, context.gc.add((real_t *) new std::vector<value_t>)};
         value_t expect = { { type_id::array, { {type_id::array} } },{
              context.gc.add(new std::vector<value_t> {
@@ -158,18 +166,14 @@ inline void test_array_creates_new_array_from_empty_or_one_args() {
 
         array_func(context, { arg1 }, ret);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-}
 
-inline void test_array_creates_new_array_different_combinations_of_two_or_more_args() {
-    using namespace cuttle::vm;
+BOOST_AUTO_TEST_SUITE_END()
 
-    context_t context;
+BOOST_FIXTURE_TEST_SUITE(array_creates_new_array_different_combinations_of_two_or_more_args_suite, context_fixture)
 
-    populate(context);
-
-    {
+    BOOST_AUTO_TEST_CASE(case1) {
         value_t arg1 = { {type_id::real}, context.gc.add(new real_t {1238912.1239})};
         value_t arg2 = { {type_id::real}, context.gc.add(new real_t {123812312.100})};
         value_t arg3 = { {type_id::real}, context.gc.add(new real_t {122.15639})};
@@ -180,9 +184,10 @@ inline void test_array_creates_new_array_different_combinations_of_two_or_more_a
 
         array_func(context, { arg1, arg2, arg3 }, ret);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-    {
+
+    BOOST_AUTO_TEST_CASE(case2) {
         value_t arg1 = { {type_id::real}, context.gc.add(new real_t {1238912.1239})};
         value_t arg2 = { {type_id::real}, context.gc.add(new real_t {123812312.100})};
         value_t expect = { { type_id::array, { {type_id::real} } },{
@@ -192,9 +197,10 @@ inline void test_array_creates_new_array_different_combinations_of_two_or_more_a
 
         array_func(context, { arg1, arg2 }, ret);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-    {
+
+    BOOST_AUTO_TEST_CASE(case3) {
         value_t arg1 = { {type_id::boolean}, context.gc.add((real_t *) new bool {true})};
         value_t arg2 = { {type_id::real}, context.gc.add(new real_t {123812312.100})};
         value_t arg3 = { {type_id::real}, context.gc.add(new real_t {1238912.1239})};
@@ -205,9 +211,10 @@ inline void test_array_creates_new_array_different_combinations_of_two_or_more_a
 
         array_func(context, { arg1, arg2, arg3 }, ret);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-    {
+
+    BOOST_AUTO_TEST_CASE(case4) {
         value_t arg1 = { {type_id::boolean}, context.gc.add((real_t *) new bool {true})};
         value_t arg2 = { {type_id::boolean}, context.gc.add((real_t *) new bool {true})};
         value_t arg3 = { {type_id::boolean}, context.gc.add((real_t *) new bool {true})};
@@ -239,18 +246,14 @@ inline void test_array_creates_new_array_different_combinations_of_two_or_more_a
             arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16
         }, ret);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-}
 
-inline void test_array_func_is_correctly_located_by_context() {
-    using namespace cuttle::vm;
+BOOST_AUTO_TEST_SUITE_END()
 
-    context_t context;
+BOOST_FIXTURE_TEST_SUITE(array_func_is_correctly_located_by_context_suite, context_fixture)
 
-    populate(context);
-
-    {
+    BOOST_AUTO_TEST_CASE(case1) {
         value_t expect = { { type_id::array }, {
                              context.gc.add(new std::vector<value_t>)
         } };
@@ -258,9 +261,10 @@ inline void test_array_func_is_correctly_located_by_context() {
 
         call(context, "array", { }, 0, ret);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-    {
+
+    BOOST_AUTO_TEST_CASE(case2) {
         value_t arg1 = { {type_id::boolean}, context.gc.add((real_t *) new bool {true})};
         value_t arg2 = { {type_id::boolean}, context.gc.add((real_t *) new bool {true})};
         value_t arg3 = { {type_id::boolean}, context.gc.add((real_t *) new bool {true})};
@@ -292,15 +296,7 @@ inline void test_array_func_is_correctly_located_by_context() {
                 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16
         }, 0, ret);
 
-        AssertEqual(ret, expect, "Return value");
+        BOOST_CHECK(ret == expect);
     }
-}
 
-void run_array_tests() {
-	TESTCASE;
-    test_array_construct_type_children_works_properly_with_empty_or_one_args();
-    test_array_construct_type_children_works_properly_with_two_or_more_args();
-    test_array_creates_new_array_from_empty_or_one_args();
-    test_array_creates_new_array_different_combinations_of_two_or_more_args();
-    test_array_func_is_correctly_located_by_context();
-}
+BOOST_AUTO_TEST_SUITE_END()
