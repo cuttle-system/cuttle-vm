@@ -49,7 +49,7 @@ cuttle::vm::value_t parse_value(cuttle::vm::context_t& context, std::istream &in
 	std::string converted_str = convert_special_chars(str);
 	value_t str_value = { {type_id::string}, {context.gc.add(new std::string(converted_str))} };
 
-	// TODO: integral and boolean from string translation
+	// TODO: boolean from string translation
 
 	switch (type) {
 	case 'i':
