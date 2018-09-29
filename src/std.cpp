@@ -4,6 +4,7 @@
 #include "std/boolean.cpp"
 #include "std/string.cpp"
 #include "std/array.cpp"
+#include "std/integral.cpp"
 
 
 void cuttle::vm::populate(context_t& context) {
@@ -13,4 +14,5 @@ void cuttle::vm::populate(context_t& context) {
 	register_boolean(context);
 	register_string(context);
 	register_array(context);
+	register_integral(context);
 }
