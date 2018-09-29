@@ -26,7 +26,7 @@ void register_string(context_t& context) {
 	real_to_string.data.function = real_to_string_func;
 	add(context, "string", real_to_string);
 
-	value_t integral_to_string = { { type_id::function, { { type_id::string } } } };
+	value_t integral_to_string = { { type_id::function, { { type_id::integral } } } };
 	integral_to_string.data.function = integral_to_string_func;
 	add(context, "string", integral_to_string);
 	
