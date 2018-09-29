@@ -1,5 +1,5 @@
 #include <algorithm>
-#include "value_methods.hpp"
+#include "vm_value_methods.hpp"
 #include "type_error.hpp"
 
 bool cuttle::vm::operator==(const value_t& left, const value_t& right) {

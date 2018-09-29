@@ -1,4 +1,4 @@
-#include "context_methods.hpp"
+#include "vm_context_methods.hpp"
 #include "name_error.hpp"
 #include "type_argn_error.hpp"
 
@@ -25,7 +25,7 @@ const cuttle::vm::value_t& cuttle::vm::get(context_t& context, const std::string
 }
 
 int cuttle::vm::call(
-    context& context,
+    context_t& context,
     const std::string& name,
     const std::vector<value_t>& values,
     unsigned int type_argn,

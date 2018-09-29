@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-#include "function.hpp"
+#include "vm_function.hpp"
 #include "type_error.hpp"
 
 #define VALUE_GCC_SUPPORTED_TYPES \
@@ -44,7 +44,7 @@ namespace cuttle {
 		};
 
 		/*
-		 * Note: type children can't be type_id::any because then they can't be found by an implemented context structure.
+		 * Note: type children can't be type_id::any because then they can't be found by an implemented context_t structure.
 		 * Also, the runtime check will have too big impact on performance, so it is not implemented
 		 */
 		struct type_t {

@@ -8,7 +8,7 @@ namespace cuttle {
 		{
 		public:
 			vm_error() : runtime_error("Unknown vm error") {}
-			vm_error(std::string msg) : runtime_error(msg.c_str()) {}
+			explicit vm_error(std::string msg) : runtime_error(msg.c_str()) {}
 		};
 	}
 }

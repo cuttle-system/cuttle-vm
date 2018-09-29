@@ -1,5 +1,5 @@
-#include "context_methods.hpp"
-#include "value_methods.hpp"
+#include "vm_context_methods.hpp"
+#include "vm_value_methods.hpp"
 
 using namespace cuttle::vm;
 
@@ -62,9 +62,9 @@ void register_real(context_t& context) {
 
 	//value_t plus = { { type_id::function, { { type_id::real }, { type_id::real } } } };
 	//plus.data.function = real_plus_func;
-	//add(context, "+", plus);
-	//add(context, "real", { type_id::function, { real_plus_func } });
-	//add(context, "real", { type_id::function,  { real_plus_func }});
-	//add(context, "real", string_to_real_func);
-	//add(context, "real", integral_to_real_func);
+	//add(context_t, "+", plus);
+	//add(context_t, "real", { type_id::function, { real_plus_func } });
+	//add(context_t, "real", { type_id::function,  { real_plus_func }});
+	//add(context_t, "real", string_to_real_func);
+	//add(context_t, "real", integral_to_real_func);
 }

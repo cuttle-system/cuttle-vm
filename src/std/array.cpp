@@ -1,6 +1,6 @@
 #include <algorithm>
-#include "context_methods.hpp"
-#include "value_methods.hpp"
+#include "vm_context_methods.hpp"
+#include "vm_value_methods.hpp"
 
 using namespace cuttle::vm;
 

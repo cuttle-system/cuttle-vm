@@ -5,7 +5,7 @@
 #include <boost/test/unit_test.hpp>
 #include <fstream>
 #include <string>
-#include "context.hpp"
+#include "vm_context.hpp"
 #include "std.hpp"
 #include "std/real.cpp"
 

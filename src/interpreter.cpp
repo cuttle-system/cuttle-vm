@@ -1,7 +1,7 @@
 #include <sstream>
 #include <iterator>
 #include <vector>
-#include "context_methods.hpp"
+#include "vm_context_methods.hpp"
 #include "interpreter.hpp"
 #include "special_char_conversion_error.hpp"
 #include "parse_error.hpp"
@@ -36,7 +36,7 @@ std::string convert_special_chars(std::string str) {
 	return converted_str;
 }
 
-cuttle::vm::value_t parse_value(cuttle::vm::context_t& context, std::stringstream &input) {
+cuttle::vm::value_t parse_value(cuttle::vm::context_t& context, std::istream &input) {
 	using namespace cuttle::vm;
 	
 	value_t val;
@@ -71,7 +71,7 @@ cuttle::vm::value_t parse_value(cuttle::vm::context_t& context, std::stringstrea
 	return val;
 }
 
-void cuttle::vm::eval(std::stringstream &input, cuttle::vm::context_t &context, std::deque<cuttle::vm::value_t> &arg_stack) {
+void cuttle::vm::eval(std::istream &input, cuttle::vm::context_t &context, std::deque<cuttle::vm::value_t> &arg_stack) {
 	using namespace cuttle::vm;
 
     unsigned int argn, type_argn;

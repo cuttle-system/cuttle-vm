@@ -4,7 +4,7 @@
 #include <boost/test/unit_test.hpp>
 #include <fstream>
 #include <string>
-#include "context.hpp"
+#include "vm_context.hpp"
 #include "std.hpp"
 #include "std/boolean.cpp"
 
@@ -129,37 +129,37 @@ BOOST_AUTO_TEST_SUITE_END()
 //BOOST_FIXTURE_TEST_SUITE(bigger_suite, context_fixture)
 //	using namespace cuttle::vm;
 //
-//	context_t context;
+//	context_t context_t;
 //
-//	populate(context);
+//	populate(context_t);
 //
 //	{
-//		value_t val1 = { { type_id::real },{ context.gc.add(new real_t{ 1.0123891723 }) } };
-//		value_t val2 = { { type_id::real },{ context.gc.add(new real_t{ 1.0123891723 }) } };
-//		value_t expect = { { type_id::boolean },{ context.gc.add(new bool{ false }) } };
+//		value_t val1 = { { type_id::real },{ context_t.gc.add(new real_t{ 1.0123891723 }) } };
+//		value_t val2 = { { type_id::real },{ context_t.gc.add(new real_t{ 1.0123891723 }) } };
+//		value_t expect = { { type_id::boolean },{ context_t.gc.add(new bool{ false }) } };
 //		value_t ret;
 //
-//		not_equal_func(context, { val1, val2 }, ret);
+//		not_equal_func(context_t, { val1, val2 }, ret);
 //
 //		BOOST_CHECK(ret == expect);
 //	}
 //	{
-//		value_t val1 = { { type_id::real },{ context.gc.add(new real_t{ 1.0123891723 }) } };
-//		value_t val2 = { { type_id::real },{ context.gc.add(new real_t{ 1.0123891273 }) } };
-//		value_t expect = { { type_id::boolean },{ context.gc.add(new bool{ true }) } };
+//		value_t val1 = { { type_id::real },{ context_t.gc.add(new real_t{ 1.0123891723 }) } };
+//		value_t val2 = { { type_id::real },{ context_t.gc.add(new real_t{ 1.0123891273 }) } };
+//		value_t expect = { { type_id::boolean },{ context_t.gc.add(new bool{ true }) } };
 //		value_t ret;
 //
-//		not_equal_func(context, { val1, val2 }, ret);
+//		not_equal_func(context_t, { val1, val2 }, ret);
 //
 //		BOOST_CHECK(ret == expect);
 //	}
 //	{
-//		value_t val1 = { { type_id::integral },{ context.gc.add(new integral_t{ 12 }) } };
-//		value_t val2 = { { type_id::integral },{ context.gc.add(new integral_t{ 123 }) } };
-//		value_t expect = { { type_id::boolean },{ context.gc.add(new bool{ false }) } };
+//		value_t val1 = { { type_id::integral },{ context_t.gc.add(new integral_t{ 12 }) } };
+//		value_t val2 = { { type_id::integral },{ context_t.gc.add(new integral_t{ 123 }) } };
+//		value_t expect = { { type_id::boolean },{ context_t.gc.add(new bool{ false }) } };
 //		value_t ret;
 //
-//		not_equal_func(context, { val1, val2 }, ret);
+//		not_equal_func(context_t, { val1, val2 }, ret);
 //
 //		BOOST_CHECK(ret == expect);
 //	}
@@ -168,37 +168,37 @@ BOOST_AUTO_TEST_SUITE_END()
 //BOOST_FIXTURE_TEST_SUITE(smaller_suite, context_fixture)
 //	using namespace cuttle::vm;
 //
-//	context_t context;
+//	context_t context_t;
 //
-//	populate(context);
+//	populate(context_t);
 //
 //	{
-//		value_t val1 = { { type_id::real },{ context.gc.add(new real_t{ 1.0123891723 }) } };
-//		value_t val2 = { { type_id::real },{ context.gc.add(new real_t{ 1.0123891723 }) } };
-//		value_t expect = { { type_id::boolean },{ context.gc.add(new bool{ false }) } };
+//		value_t val1 = { { type_id::real },{ context_t.gc.add(new real_t{ 1.0123891723 }) } };
+//		value_t val2 = { { type_id::real },{ context_t.gc.add(new real_t{ 1.0123891723 }) } };
+//		value_t expect = { { type_id::boolean },{ context_t.gc.add(new bool{ false }) } };
 //		value_t ret;
 //
-//		not_equal_func(context, { val1, val2 }, ret);
+//		not_equal_func(context_t, { val1, val2 }, ret);
 //
 //		BOOST_CHECK(ret == expect);
 //	}
 //	{
-//		value_t val1 = { { type_id::real },{ context.gc.add(new real_t{ 1.0123891723 }) } };
-//		value_t val2 = { { type_id::real },{ context.gc.add(new real_t{ 1.0123891273 }) } };
-//		value_t expect = { { type_id::boolean },{ context.gc.add(new bool{ true }) } };
+//		value_t val1 = { { type_id::real },{ context_t.gc.add(new real_t{ 1.0123891723 }) } };
+//		value_t val2 = { { type_id::real },{ context_t.gc.add(new real_t{ 1.0123891273 }) } };
+//		value_t expect = { { type_id::boolean },{ context_t.gc.add(new bool{ true }) } };
 //		value_t ret;
 //
-//		not_equal_func(context, { val1, val2 }, ret);
+//		not_equal_func(context_t, { val1, val2 }, ret);
 //
 //		BOOST_CHECK(ret == expect);
 //	}
 //	{
-//		value_t val1 = { { type_id::integral },{ context.gc.add(new integral_t{ 12 }) } };
-//		value_t val2 = { { type_id::integral },{ context.gc.add(new integral_t{ 123 }) } };
-//		value_t expect = { { type_id::boolean },{ context.gc.add(new bool{ false }) } };
+//		value_t val1 = { { type_id::integral },{ context_t.gc.add(new integral_t{ 12 }) } };
+//		value_t val2 = { { type_id::integral },{ context_t.gc.add(new integral_t{ 123 }) } };
+//		value_t expect = { { type_id::boolean },{ context_t.gc.add(new bool{ false }) } };
 //		value_t ret;
 //
-//		not_equal_func(context, { val1, val2 }, ret);
+//		not_equal_func(context_t, { val1, val2 }, ret);
 //
 //		BOOST_CHECK(ret == expect);
 //	}

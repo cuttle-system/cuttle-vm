@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include <typeindex>
-#include "value.hpp"
+#include "vm_value.hpp"
 #include "gc_type_error.hpp"
 
 namespace cuttle {

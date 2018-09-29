@@ -1,5 +1,5 @@
 #include "std.hpp"
-#include "context_methods.hpp"
+#include "vm_context_methods.hpp"
 #include "std/real.cpp"
 #include "std/boolean.cpp"
 #include "std/string.cpp"

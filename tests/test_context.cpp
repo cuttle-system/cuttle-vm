@@ -6,8 +6,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "context_methods.hpp"
-#include "value_methods.hpp"
+#include "vm_context_methods.hpp"
+#include "vm_value_methods.hpp"
 #include "type_error.hpp"
 #include "name_error.hpp"
 #include "type_argn_error.hpp"

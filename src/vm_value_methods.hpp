@@ -1,6 +1,6 @@
 #pragma once
 
-#include "value.hpp"
+#include "vm_value.hpp"
 
 namespace cuttle {
 	namespace vm {
