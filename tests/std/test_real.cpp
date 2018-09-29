@@ -152,12 +152,9 @@ BOOST_FIXTURE_TEST_SUITE(string_to_real_suite, context_fixture)
     BOOST_AUTO_TEST_CASE(case3) {
 		value_t val = { { type_id::string } };
 		val.data.string = context.gc.add_r(new std::string{ "ads" });
-		value_t expect = { { type_id::real },{ context.gc.add(new real_t{ 0.0 }) } };
 		value_t ret;
 
-		string_to_real_func(context, { val }, ret);
-
-		BOOST_CHECK(ret == expect);
+		BOOST_CHECK_THROW(string_to_real_func(context, { val }, ret), std::invalid_argument);
 	}
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -25,7 +25,7 @@ int real_divide_func(context_t& context, const std::vector<value_t>& args, value
 
 int string_to_real_func(context_t& context, const std::vector<value_t>& args, value_t& ret) {
 	ret = { {type_id::real} };
-	ret.data.real = context.gc.add_r(new real_t{ atof(args[0].data.string->c_str()) }); // TODO: try strtod (enable number format check)
+	ret.data.real = context.gc.add_r(new real_t{ std::stod(*args[0].data.string) });
 	return 0;
 }
 
