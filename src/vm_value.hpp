@@ -18,6 +18,7 @@ namespace cuttle {
 		using byte_t = char;
 		using array_t = std::vector<value_t>;
 		using function_t = function_ptr_t;
+		using object_t = void *;
 
 		struct value_t;
 
@@ -30,6 +31,7 @@ namespace cuttle {
 			char *byte;
 			std::vector<value_t> *array;
 			function_ptr_t *function;
+			object_t object;
 		};
 
 		enum class type_id {
@@ -40,7 +42,8 @@ namespace cuttle {
 			boolean,
 			byte,
 			array,
-			function
+			function,
+			object
 		};
 
 		/*

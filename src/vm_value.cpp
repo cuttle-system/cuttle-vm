@@ -32,6 +32,8 @@ bool cuttle::vm::operator==(const value_t& left, const value_t& right) {
 		return *left.data.byte == *right.data.byte;
 	case type_id::string:
 		return *left.data.string == *right.data.string;
+	case type_id::object:
+		return left.data.object == right.data.object;
 	default:
 		throw type_error("unknown type");
 	}
