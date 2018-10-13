@@ -26,6 +26,9 @@ std::string convert_special_chars(std::string str) {
 			case 't':
 				converted_str += '\t';
 				break;
+			case '\\':
+				converted_str += '\\';
+				break;
 			default:
 				throw special_char_conversion_error(std::string("Unknown character '") + str[i] + "'");
 			}
