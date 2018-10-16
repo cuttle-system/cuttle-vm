@@ -34,7 +34,7 @@ namespace cuttle {
 			object_t object;
 		};
 
-		enum class type_id {
+		enum type_id {
 			any,
 			real,
 			integral,

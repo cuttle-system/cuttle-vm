@@ -18,6 +18,16 @@ int boolean_from_string_func(context_t& context, const std::vector<value_t>& arg
 	return 0;
 }
 
+int boolean_true_func(context_t& context, const std::vector<value_t>& args, value_t& ret) {
+	ret = { { type_id::boolean },{ context.gc.add(new bool{ true }) } };
+	return 0;
+}
+
+int boolean_false_func(context_t& context, const std::vector<value_t>& args, value_t& ret) {
+	ret = { { type_id::boolean },{ context.gc.add(new bool{ false }) } };
+	return 0;
+}
+
 void register_boolean(context_t& context) {
 	value_t equal = { { type_id::function, { { type_id::any }, { type_id::any } } } };
 	equal.data.function = equal_func;
@@ -30,4 +40,12 @@ void register_boolean(context_t& context) {
 	value_t boolean_from_string = { { type_id::function, { { type_id::string } } } };
 	boolean_from_string.data.function = boolean_from_string_func;
 	add(context, "boolean", boolean_from_string);
+
+	value_t boolean_true = { { type_id::function, {} } };
+	boolean_true.data.function = boolean_true_func;
+	add(context, "true", boolean_true);
+
+	value_t boolean_false = { { type_id::function, {} } };
+	boolean_false.data.function = boolean_false_func;
+	add(context, "false", boolean_false);
 }
