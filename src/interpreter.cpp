@@ -97,7 +97,9 @@ void cuttle::vm::eval(std::istream &input, cuttle::vm::context_t &context, std::
 		while (argn--) {
 			arg_stack.pop_back();
 		}
-		arg_stack.push_back(ret);
+		if (ret.type.id != type_id::nothing) {
+            arg_stack.push_back(ret);
+        }
 		break;
     default:
         throw parse_error(std::string("Unknown operation: ") + operation);

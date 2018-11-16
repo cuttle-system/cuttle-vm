@@ -35,6 +35,7 @@ namespace cuttle {
 		};
 
 		enum type_id {
+			nothing,
 			any,
 			real,
 			integral,

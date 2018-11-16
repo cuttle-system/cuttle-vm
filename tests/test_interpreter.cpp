@@ -119,3 +119,23 @@ BOOST_FIXTURE_TEST_SUITE(can_call_functions_with_type_argn_less_than_argn_suite,
 	}
 
 BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(can_call_void_functions, context_fixture)
+
+    BOOST_AUTO_TEST_CASE(case1) {
+        std::stringstream input1("b s a");
+        std::stringstream input2("b i 121");
+        std::stringstream input3("c 2 2 setvar");
+        std::stringstream input4("b s a");
+        std::stringstream input5("c 1 1 getvar");
+        std::deque<value_t> arg_stack;
+        value_t val1 = value_t{ { type_id::integral }, context.gc.add(new integral_t(121)) };
+        eval(input1, context, arg_stack);
+        eval(input2, context, arg_stack);
+        eval(input3, context, arg_stack);
+        eval(input4, context, arg_stack);
+        eval(input5, context, arg_stack);
+        BOOST_CHECK(arg_stack == std::deque<value_t>{val1});
+    }
+
+BOOST_AUTO_TEST_SUITE_END()

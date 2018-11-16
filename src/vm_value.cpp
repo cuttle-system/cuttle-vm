@@ -1,6 +1,7 @@
 #include <algorithm>
 #include "vm_value_methods.hpp"
 #include "type_error.hpp"
+#include "vm_context.hpp"
 
 bool cuttle::vm::operator==(const value_t& left, const value_t& right) {
 	using namespace cuttle::vm;
@@ -71,4 +72,40 @@ bool cuttle::vm::operator>(const type_t& left, const type_t& right) {
 
 bool cuttle::vm::operator<(const type_t& left, const type_t& right) {
 	return left != right && (left.id < right.id || left.children < right.children);
+}
+
+cuttle::vm::value_t cuttle::vm::copy_value(context_t &context, const value_t &value) {
+	value_t copied;
+	copied.type = value.type;
+
+	switch (value.type.id) {
+		case type_id::real:
+			copied.data.any = context.gc.add(new real_t{*value.data.real});
+			break;
+		case type_id::integral:
+			copied.data.any = context.gc.add(new integral_t{*value.data.integral});
+			break;
+		case type_id::string:
+			copied.data.any = context.gc.add(new string_t{*value.data.string});
+			break;
+		case type_id::boolean:
+			copied.data.any = context.gc.add(new boolean_t{*value.data.boolean});
+			break;
+		case type_id::byte:
+			copied.data.any = context.gc.add(new byte_t{*value.data.byte});
+			break;
+		case type_id::array:
+			copied.data.any = context.gc.add(new array_t{*value.data.array});
+			break;
+		case type_id::function:
+			copied.data.function = value.data.function;
+			break;
+		case type_id::object:
+			copied.data.object = value.data.object;
+			break;
+		default:
+			throw type_error("can't copy type");
+	}
+
+	return copied;
 }
