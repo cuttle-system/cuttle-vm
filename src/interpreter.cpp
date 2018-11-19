@@ -41,7 +41,7 @@ std::string convert_special_chars(std::string str) {
 
 cuttle::vm::value_t parse_value(cuttle::vm::context_t& context, std::istream &input) {
 	using namespace cuttle::vm;
-	
+
 	value_t val;
 	char type;
 	std::string str;
@@ -102,6 +102,7 @@ void cuttle::vm::eval(std::istream &input, cuttle::vm::context_t &context, std::
 		}
 		if (ret.type.id != type_id::nothing) {
             arg_stack.push_back(ret);
+            context.registers.push_back("");
         }
 		break;
     case 'a':
@@ -116,32 +117,33 @@ void cuttle::vm::eval(std::istream &input, cuttle::vm::context_t &context, std::
         }
         if (ret.type.id != type_id::nothing) {
             arg_stack.push_back(ret);
+            context.registers.push_back("");
         }
 	    break;
     case 'g':
 	    input >> direction >> label_name;
-	    if (direction == '<') {
-	        if (!arg_stack.empty() && *arg_stack.back().data.boolean) {
-                arg_stack.pop_back();
-                input.seekg(context.labels[label_name]);
-	        }
-        } else if (direction == '>') {
-            if (!arg_stack.empty() && *arg_stack.back().data.boolean) {
-                arg_stack.pop_back();
-                std::string line, found_label_name;
-                while (std::getline(input, line)) {
-                    if (line[0] == 'l') {
-                        std::stringstream ss;
-                        ss.str(line);
-                        char op;
-                        ss >> op >> found_label_name;
-                        if (label_name == found_label_name) {
-                            break;
+		if (!arg_stack.empty()) {
+			if (*arg_stack.back().data.boolean) {
+                if (direction == '<') {
+                    input.seekg(context.labels[label_name]);
+                } else if (direction == '>') {
+                    std::string line, found_label_name;
+                    while (std::getline(input, line)) {
+                        if (line[0] == 'l') {
+                            std::stringstream ss;
+                            ss.str(line);
+                            char op;
+                            ss >> op >> found_label_name;
+                            if (label_name == found_label_name) {
+                                break;
+                            }
                         }
                     }
                 }
             }
-	    }
+            arg_stack.pop_back();
+            context.registers.pop_back();
+        }
 	    break;
     case 'l':
         input >> label_name;

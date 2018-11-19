@@ -178,3 +178,69 @@ BOOST_FIXTURE_TEST_SUITE(can_handle_gotos, context_fixture)
     }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(can_handle_registers, context_fixture)
+
+    BOOST_AUTO_TEST_CASE(case1) {
+        std::stringstream input("r foo\n"
+                                "b s a\n"
+                                "b i 212\n"
+                                "b i 121\n"
+                                "a foo array");
+        std::deque<value_t> arg_stack;
+        value_t val1 = value_t{ { type_id::array, { {type_id::string}, {type_id::integral} } },
+                                context.gc.add(new std::vector<value_t>{
+                                        { { type_id::string }, context.gc.add(new string_t("a")) },
+                                        { { type_id::integral }, context.gc.add(new integral_t(212)) },
+                                        { { type_id::integral }, context.gc.add(new integral_t(121)) },
+                                })
+        };
+        std::deque<value_t> expected = { val1 };
+        eval(input, context, arg_stack);
+        eval(input, context, arg_stack);
+        eval(input, context, arg_stack);
+        eval(input, context, arg_stack);
+        eval(input, context, arg_stack);
+        BOOST_CHECK(arg_stack == expected);
+    }
+
+    BOOST_AUTO_TEST_CASE(case2) {
+        std::stringstream input("r foo\n"
+                                "b s walked\n"
+                                "b b false\n"
+                                "c 2 2 setvar\n"
+                                "b s a\n"
+                                "l bar\n"
+                                "b i 212\n"
+                                "b i 121\n"
+                                "b s walked\n"
+                                "c 1 1 getvar\n"
+                                "g > break\n"
+                                "b s walked\n"
+                                "b b true\n"
+                                "c 2 2 setvar\n"
+                                "b b true\n"
+                                "g < bar\n"
+                                "l break\n"
+                                "a foo array");
+        std::deque<value_t> arg_stack;
+        value_t val1 = value_t{ { type_id::array, { {type_id::string}, {type_id::integral} } },
+                                context.gc.add(new std::vector<value_t>{
+                                        { { type_id::string }, context.gc.add(new string_t("a")) },
+                                        { { type_id::integral }, context.gc.add(new integral_t(212)) },
+                                        { { type_id::integral }, context.gc.add(new integral_t(121)) },
+                                        { { type_id::integral }, context.gc.add(new integral_t(212)) },
+                                        { { type_id::integral }, context.gc.add(new integral_t(121)) },
+                                })
+        };
+        std::deque<value_t> expected = { val1 };
+        while (!input.eof()) {
+            if (input.peek() == EOF) {
+                break;
+            }
+            eval(input, context, arg_stack);
+        }
+        BOOST_CHECK(arg_stack == expected);
+    }
+
+BOOST_AUTO_TEST_SUITE_END()

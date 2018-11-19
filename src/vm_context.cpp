@@ -9,10 +9,10 @@ void cuttle::vm::add(context_t& context, const std::string& name, value_t& value
 		context.variables[name] = {};
 	}
 
-	if (context.variables[name].count(value.type) > 0) {
-		auto some_type = context.variables[name][value.type];
-		throw type_error("variable with the same name and type is already defined");
-	}
+//	if (context.variables[name].count(value.type) > 0) {
+//		auto some_type = context.variables[name][value.type];
+//		throw type_error("variable with the same name and type is already defined");
+//	}
 
 	context.variables[name][value.type] = value;
 }
