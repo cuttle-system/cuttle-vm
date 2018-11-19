@@ -139,3 +139,42 @@ BOOST_FIXTURE_TEST_SUITE(can_call_void_functions, context_fixture)
     }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(can_handle_gotos, context_fixture)
+
+    BOOST_AUTO_TEST_CASE(case1) {
+        std::stringstream input("b s a\n"
+                                 "l foo\n"
+                                 "b i 121\n"
+                                 "b b true\n"
+                                 "g < foo");
+        std::deque<value_t> arg_stack;
+        value_t val1 = value_t{ { type_id::string }, context.gc.add(new string_t("a")) };
+        value_t val2 = value_t{ { type_id::integral }, context.gc.add(new integral_t(121)) };
+        value_t val3 = value_t{ { type_id::integral }, context.gc.add(new integral_t(121)) };
+        std::deque<value_t> expected = { val1, val2, val3 };
+        eval(input, context, arg_stack);
+        eval(input, context, arg_stack);
+        eval(input, context, arg_stack);
+        eval(input, context, arg_stack);
+        eval(input, context, arg_stack);
+        eval(input, context, arg_stack);
+        BOOST_CHECK(arg_stack == expected);
+    }
+
+    BOOST_AUTO_TEST_CASE(case2) {
+        std::stringstream input("b b true\n"
+                                "g > foo\n"
+                                "b s a\n"
+                                "l foo\n"
+                                "b i 121");
+        std::deque<value_t> arg_stack;
+        value_t val1 = value_t{ { type_id::integral }, context.gc.add(new integral_t(121)) };
+        std::deque<value_t> expected = { val1 };
+        eval(input, context, arg_stack);
+        eval(input, context, arg_stack);
+        eval(input, context, arg_stack);
+        BOOST_CHECK(arg_stack == expected);
+    }
+
+BOOST_AUTO_TEST_SUITE_END()

@@ -76,9 +76,9 @@ void cuttle::vm::eval(std::istream &input, cuttle::vm::context_t &context, std::
 	using namespace cuttle::vm;
 
     unsigned int argn, type_argn;
-    char operation;
+    char operation, direction;
     value_t ret;
-    std::string func_name;
+    std::string func_name, label_name, register_name;
     std::vector<value_t> args;
 
     input >> operation;
@@ -86,9 +86,11 @@ void cuttle::vm::eval(std::istream &input, cuttle::vm::context_t &context, std::
 	switch (operation) {
 	case 'b':
 		arg_stack.push_back(parse_value(context, input));
+		context.registers.push_back("");
 		break;
 	case 'f':
 		arg_stack.push_front(parse_value(context, input));
+		context.registers.push_front("");
 		break;
 	case 'c':
 		input >> argn >> type_argn >> func_name;
@@ -96,11 +98,59 @@ void cuttle::vm::eval(std::istream &input, cuttle::vm::context_t &context, std::
 		call(context, func_name, args, type_argn, ret);
 		while (argn--) {
 			arg_stack.pop_back();
+            context.registers.pop_back();
 		}
 		if (ret.type.id != type_id::nothing) {
             arg_stack.push_back(ret);
         }
 		break;
+    case 'a':
+        input >> register_name >> func_name;
+        argn = 0;
+        for (auto it = context.registers.crbegin(); it != context.registers.crend() && *it != register_name; ++it, ++argn);
+        args = std::vector<value_t>(arg_stack.begin() + (arg_stack.size() - argn), arg_stack.end());
+        call(context, func_name, args, 0, ret);
+        while (argn--) {
+            arg_stack.pop_back();
+            context.registers.pop_back();
+        }
+        if (ret.type.id != type_id::nothing) {
+            arg_stack.push_back(ret);
+        }
+	    break;
+    case 'g':
+	    input >> direction >> label_name;
+	    if (direction == '<') {
+	        if (!arg_stack.empty() && *arg_stack.back().data.boolean) {
+                arg_stack.pop_back();
+                input.seekg(context.labels[label_name]);
+	        }
+        } else if (direction == '>') {
+            if (!arg_stack.empty() && *arg_stack.back().data.boolean) {
+                arg_stack.pop_back();
+                std::string line, found_label_name;
+                while (std::getline(input, line)) {
+                    if (line[0] == 'l') {
+                        std::stringstream ss;
+                        ss.str(line);
+                        char op;
+                        ss >> op >> found_label_name;
+                        if (label_name == found_label_name) {
+                            break;
+                        }
+                    }
+                }
+            }
+	    }
+	    break;
+    case 'l':
+        input >> label_name;
+        context.labels[label_name] = input.tellg();
+        break;
+    case 'r':
+        input >> register_name;
+        context.registers.push_back(register_name);
+	    break;
     default:
         throw parse_error(std::string("Unknown operation: ") + operation);
 	}
