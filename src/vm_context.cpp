@@ -9,19 +9,21 @@ void cuttle::vm::add(context_t& context, const std::string& name, value_t& value
 		context.variables[name] = {};
 	}
 
-//	if (context.variables[name].count(value.type) > 0) {
-//		auto some_type = context.variables[name][value.type];
-//		throw type_error("variable with the same name and type is already defined");
-//	}
-
 	context.variables[name][value.type] = value;
 }
 
 const cuttle::vm::value_t& cuttle::vm::get(context_t& context, const std::string& name, const type_t& type) {
-	if (context.variables.count(name) == 0 || context.variables[name].count(type) == 0) {
-		throw name_error("variable '" + name + "' not found");
+	context_t *current = &context;
+	while (true) {
+		if (!current->parent && (current->variables.count(name) == 0 || current->variables[name].count(type) == 0)) {
+			throw name_error("variable '" + name + "' not found");
+		} else if (current->parent) {
+			current = current->parent;
+		} else {
+			break;
+		}
 	}
-	return context.variables[name][type];
+	return current->variables[name][type];
 }
 
 int cuttle::vm::call(

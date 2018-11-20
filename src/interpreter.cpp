@@ -72,6 +72,15 @@ cuttle::vm::value_t parse_value(cuttle::vm::context_t& context, std::istream &in
 	return val;
 }
 
+void cuttle::vm::interpret(std::istream &input, context_t &context, std::deque<value_t> &arg_stack) {
+	while (!input.eof()) {
+		if (input.peek() == EOF) {
+			break;
+		}
+		vm::eval(input, context, arg_stack);
+	}
+}
+
 void cuttle::vm::eval(std::istream &input, cuttle::vm::context_t &context, std::deque<cuttle::vm::value_t> &arg_stack) {
 	using namespace cuttle::vm;
 

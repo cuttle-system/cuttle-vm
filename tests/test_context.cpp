@@ -437,3 +437,45 @@ BOOST_FIXTURE_TEST_SUITE(call_type_argn_arg_properly_handled_suite, context_fixt
     }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_FIXTURE_TEST_SUITE(context_parent_suite, context_fixture)
+
+	BOOST_AUTO_TEST_CASE(case1) {
+		value_t func = { { type_id::function, { { type_id::integral } } } };
+		func.data.function = [](context_t& context, const std::vector<value_t>& args, value_t& ret) {
+			ret.type = { type_id::boolean };
+			ret.data.boolean = context.gc.add_r(new bool{ true });
+			return 0;
+		};
+		value_t ret;
+		value_t expect = { { type_id::boolean } };
+		expect.data.boolean = context.gc.add_r(new bool{ true });
+
+		add(context, "foo", func);
+
+        int status = call(context, "foo", { { type_id::integral } }, 1, ret);
+
+        BOOST_CHECK(status == 0);
+        BOOST_CHECK(ret == expect);
+
+        status = call(context, "foo", { { type_id::integral }, { type_id::integral } }, 1, ret);
+
+        BOOST_CHECK(status == 0);
+        BOOST_CHECK(ret == expect);
+
+        context_t context1;
+
+        context1.parent = &context;
+
+        status = call(context1, "foo", { { type_id::integral } }, 1, ret);
+
+        BOOST_CHECK(status == 0);
+        BOOST_CHECK(ret == expect);
+
+        status = call(context1, "foo", { { type_id::integral }, { type_id::integral } }, 1, ret);
+
+        BOOST_CHECK(status == 0);
+        BOOST_CHECK(ret == expect);
+    }
+
+BOOST_AUTO_TEST_SUITE_END()

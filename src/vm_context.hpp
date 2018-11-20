@@ -14,6 +14,7 @@ namespace cuttle {
         using registers_t = std::list<std::string>;
         using labels_t = std::map<std::string, std::ios::pos_type>;
         struct context_t {
+            context_t *parent = nullptr;
             registers_t registers;
             labels_t labels;
             variables_t variables;
