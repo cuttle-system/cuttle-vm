@@ -19,9 +19,12 @@ int getvar_func(context_t& context, const std::vector<value_t>& args, value_t& r
 void register_state(context_t& context) {
 	value_t setvar = { { type_id::function, { { type_id::string }, { type_id::any } } } };
 	setvar.data.function = setvar_func;
-	add(context, "setvar", setvar);
+    add(context, "setvar", setvar);
 
 	value_t getvar = { { type_id::function, { { type_id::string } } } };
 	getvar.data.function = getvar_func;
 	add(context, "getvar", getvar);
+
+	value_t undefined_variable = {{type_id::string}, context.gc.add(new std::string("__cuttle_undefined"))};
+    add(context, CUTTLE_UNDEFINED_VARIABLE_NAME, undefined_variable);
 }

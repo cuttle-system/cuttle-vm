@@ -32,9 +32,17 @@ int array_func(context_t& context, const std::vector<value_t>& args, value_t& re
     return 0;
 }
 
+int get_func(context_t& context, const std::vector<value_t>& args, value_t& ret) {
+    ret = copy_value(context, (*args[0].data.array)[*args[1].data.integral]);
+    return 0;
+}
 
 void register_array(context_t& context) {
     value_t array = { { type_id::function } };
     array.data.function = array_func;
     add(context, "array", array);
+
+    value_t get = { { type_id::function, {{type_id::any}, {type_id::integral}} } };
+    get.data.function = get_func;
+    add(context, "get_element", get);
 }

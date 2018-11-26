@@ -7,6 +7,9 @@
 #include "vm_value_methods.hpp"
 #include "gc.hpp"
 
+#define CUTTLE_GLOBAL_CONTEXT_NAME "__cuttle_global_context_name"
+#define CUTTLE_UNDEFINED_VARIABLE_NAME "__cuttle_undefined_variable_name"
+
 namespace cuttle {
     namespace vm {
         using variable_types_map_t = std::map<type_t, value_t>;
